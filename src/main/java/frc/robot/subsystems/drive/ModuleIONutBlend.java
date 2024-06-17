@@ -25,14 +25,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import java.util.OptionalDouble;
-import java.util.Queue;
 
 /**
  * Module IO implementation for blended TalonFX drive motor controller, SparkMax turn motor
@@ -49,13 +45,8 @@ public class ModuleIONutBlend implements ModuleIO {
   private final CANSparkMax turnSparkMax;
   private final CANcoder cancoder;
 
-  // Timestamp Queues
-  private final Queue<Double> phxTimestampQueue;
-  private final Queue<Double> spkTimestampQueue;
-
   // Drive telemetry information
   private final StatusSignal<Double> drivePosition;
-  private final Queue<Double> drivePositionQueue;
   private final StatusSignal<Double> driveVelocity;
   private final StatusSignal<Double> driveAppliedVolts;
   private final StatusSignal<Double> driveCurrent;
@@ -63,7 +54,6 @@ public class ModuleIONutBlend implements ModuleIO {
   // Steer telemetry information
   private final StatusSignal<Double> turnAbsolutePosition;
   private final RelativeEncoder turnRelativeEncoder;
-  private final Queue<Double> turnPositionQueue;
 
   // Gear ratios for SDS MK4i L2, adjust as necessary
   private final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
@@ -129,36 +119,17 @@ public class ModuleIONutBlend implements ModuleIO {
     // CANCoder Configuration
     cancoder.getConfigurator().apply(new CANcoderConfiguration());
 
-    // Odometry
-    phxTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
-    spkTimestampQueue = SparkMaxOdometryThread.getInstance().makeTimestampQueue();
-
     drivePosition = driveTalon.getPosition();
-    drivePositionQueue =
-        PhoenixOdometryThread.getInstance().registerSignal(driveTalon, driveTalon.getPosition());
     driveVelocity = driveTalon.getVelocity();
     driveAppliedVolts = driveTalon.getMotorVoltage();
     driveCurrent = driveTalon.getSupplyCurrent();
-
     turnAbsolutePosition = cancoder.getAbsolutePosition();
-    turnPositionQueue =
-        SparkMaxOdometryThread.getInstance()
-            .registerSignal(
-                () -> {
-                  double value = turnRelativeEncoder.getPosition();
-                  if (turnSparkMax.getLastError() == REVLibError.kOk) {
-                    return OptionalDouble.of(value);
-                  } else {
-                    return OptionalDouble.empty();
-                  }
-                });
 
-    BaseStatusSignal.setUpdateFrequencyForAll(Module.ODOMETRY_FREQUENCY, drivePosition);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        100.0, drivePosition); // Required for odometry, use faster rate
     BaseStatusSignal.setUpdateFrequencyForAll(
         50.0, driveVelocity, driveAppliedVolts, driveCurrent, turnAbsolutePosition);
     driveTalon.optimizeBusUtilization();
-    turnSparkMax.setPeriodicFramePeriod(
-        PeriodicFrame.kStatus2, (int) (1000.0 / Module.ODOMETRY_FREQUENCY));
     turnSparkMax.burnFlash();
   }
 
@@ -184,24 +155,6 @@ public class ModuleIONutBlend implements ModuleIO {
             / TURN_GEAR_RATIO;
     inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
     inputs.turnCurrentAmps = new double[] {turnSparkMax.getOutputCurrent()};
-
-    inputs.odometryTimestamps =
-        phxTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-    // inputs.odometryTimestamps =
-    //     spkTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-
-    inputs.odometryDrivePositionsRad =
-        drivePositionQueue.stream()
-            .mapToDouble((Double value) -> Units.rotationsToRadians(value) / DRIVE_GEAR_RATIO)
-            .toArray();
-    inputs.odometryTurnPositions =
-        turnPositionQueue.stream()
-            .map((Double value) -> Rotation2d.fromRotations(value / TURN_GEAR_RATIO))
-            .toArray(Rotation2d[]::new);
-    phxTimestampQueue.clear();
-    // SpkTimestampQueue.clear();
-    drivePositionQueue.clear();
-    turnPositionQueue.clear();
   }
 
   @Override

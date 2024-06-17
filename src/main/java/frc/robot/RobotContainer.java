@@ -78,7 +78,7 @@ public class RobotContainer {
         // flywheel = new Flywheel(new FlywheelIOTalonFX());
         drive =
             new Drive(
-                new GyroIOPigeon2(true),
+                new GyroIOPigeon2(),
                 new ModuleIONutBlend(0),
                 new ModuleIONutBlend(1),
                 new ModuleIONutBlend(2),
