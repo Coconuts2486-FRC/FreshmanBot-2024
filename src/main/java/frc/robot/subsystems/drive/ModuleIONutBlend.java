@@ -50,8 +50,8 @@ public class ModuleIONutBlend implements ModuleIO {
   private final CANcoder cancoder;
 
   // Timestamp Queues
-  private final Queue<Double> PhxTimestampQueue;
-  private final Queue<Double> SpkTimestampQueue;
+  private final Queue<Double> phxTimestampQueue;
+  private final Queue<Double> spkTimestampQueue;
 
   // Drive telemetry information
   private final StatusSignal<Double> drivePosition;
@@ -81,7 +81,7 @@ public class ModuleIONutBlend implements ModuleIO {
     switch (index) {
       case 0:
         driveTalon = new TalonFX(0);
-        turnSparkMax = new CANSparkMax(2, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(1, MotorType.kBrushless);
         cancoder = new CANcoder(2);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
@@ -93,13 +93,13 @@ public class ModuleIONutBlend implements ModuleIO {
         break;
       case 2:
         driveTalon = new TalonFX(6);
-        turnSparkMax = new CANSparkMax(6, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(7, MotorType.kBrushless);
         cancoder = new CANcoder(8);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
       case 3:
         driveTalon = new TalonFX(9);
-        turnSparkMax = new CANSparkMax(8, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(10, MotorType.kBrushless);
         cancoder = new CANcoder(11);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
@@ -130,8 +130,8 @@ public class ModuleIONutBlend implements ModuleIO {
     cancoder.getConfigurator().apply(new CANcoderConfiguration());
 
     // Odometry
-    PhxTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
-    SpkTimestampQueue = SparkMaxOdometryThread.getInstance().makeTimestampQueue();
+    phxTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
+    spkTimestampQueue = SparkMaxOdometryThread.getInstance().makeTimestampQueue();
 
     drivePosition = driveTalon.getPosition();
     drivePositionQueue =
@@ -186,9 +186,9 @@ public class ModuleIONutBlend implements ModuleIO {
     inputs.turnCurrentAmps = new double[] {turnSparkMax.getOutputCurrent()};
 
     inputs.odometryTimestamps =
-        PhxTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-    inputs.odometryTimestamps =
-        SpkTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
+        phxTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
+    // inputs.odometryTimestamps =
+    //     spkTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
 
     inputs.odometryDrivePositionsRad =
         drivePositionQueue.stream()
@@ -198,8 +198,8 @@ public class ModuleIONutBlend implements ModuleIO {
         turnPositionQueue.stream()
             .map((Double value) -> Rotation2d.fromRotations(value / TURN_GEAR_RATIO))
             .toArray(Rotation2d[]::new);
-    PhxTimestampQueue.clear();
-    SpkTimestampQueue.clear();
+    phxTimestampQueue.clear();
+    // SpkTimestampQueue.clear();
     drivePositionQueue.clear();
     turnPositionQueue.clear();
   }
