@@ -28,7 +28,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOCombined;
+import frc.robot.subsystems.drive.ModuleIONutBlend;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIO;
@@ -62,13 +62,13 @@ public class RobotContainer {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         // drive =
-        //     new Drive(
-        //         new GyroIOPigeon2(false),
-        //         new ModuleIOSparkMax(0),
-        //         new ModuleIOSparkMax(1),
-        //         new ModuleIOSparkMax(2),
-        //         new ModuleIOSparkMax(3));
-        // flywheel = new Flywheel(new FlywheelIOSparkMax());
+        // new Drive(
+        // new GyroIOPigeon2(false),
+        // new ModuleIOSparkMax(0),
+        // new ModuleIOSparkMax(1),
+        // new ModuleIOSparkMax(2),
+        // new ModuleIOSparkMax(3));
+        flywheel = new Flywheel(new FlywheelIOSparkMax());
         // drive = new Drive(
         // new GyroIOPigeon2(true),
         // new ModuleIOTalonFX(0),
@@ -78,12 +78,11 @@ public class RobotContainer {
         // flywheel = new Flywheel(new FlywheelIOTalonFX());
         drive =
             new Drive(
-                new GyroIOPigeon2(false),
-                new ModuleIOCombined(0),
-                new ModuleIOCombined(1),
-                new ModuleIOCombined(2),
-                new ModuleIOCombined(3));
-        flywheel = new Flywheel(new FlywheelIOSparkMax());
+                new GyroIOPigeon2(),
+                new ModuleIONutBlend(0),
+                new ModuleIONutBlend(1),
+                new ModuleIONutBlend(2),
+                new ModuleIONutBlend(3));
         break;
 
       case SIM:
