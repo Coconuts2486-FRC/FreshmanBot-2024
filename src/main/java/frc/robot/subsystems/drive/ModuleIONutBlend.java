@@ -73,25 +73,25 @@ public class ModuleIONutBlend implements ModuleIO {
         driveTalon = new TalonFX(0);
         turnSparkMax = new CANSparkMax(1, MotorType.kBrushless);
         cancoder = new CANcoder(2);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(-0.17631728); // MUST BE CALIBRATED
         break;
       case 1: // FR
         driveTalon = new TalonFX(3);
         turnSparkMax = new CANSparkMax(4, MotorType.kBrushless);
         cancoder = new CANcoder(5);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(0.72060488); // MUST BE CALIBRATED
         break;
       case 2: // BL
         driveTalon = new TalonFX(6);
         turnSparkMax = new CANSparkMax(7, MotorType.kBrushless);
         cancoder = new CANcoder(8);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(0.57648516); // MUST BE CALIBRATED
         break;
       case 3: // BR
         driveTalon = new TalonFX(9);
         turnSparkMax = new CANSparkMax(10, MotorType.kBrushless);
         cancoder = new CANcoder(11);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(-0.55655244); // MUST BE CALIBRATED
         break;
       default:
         throw new RuntimeException("Invalid module index");
