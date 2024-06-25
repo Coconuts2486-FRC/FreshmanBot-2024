@@ -7,31 +7,24 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-
 public class IntakeReverse extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake m_subsystem;
 
-  
   public IntakeReverse(Intake subsystem) {
     m_subsystem = subsystem;
-    
   }
 
-  
   @Override
   public void initialize() {}
 
-  
   @Override
   public void execute() {
-     m_subsystem.turnBack();
-
+    m_subsystem.turnBack();
   }
 
- 
   @Override
   public void end(boolean interrupted) {
-     m_subsystem.turnOff();
+    m_subsystem.turnOff();
   }
 }

@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakeReverse;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -34,6 +36,8 @@ import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIO;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOSparkMax;
+import frc.robot.subsystems.intake.Intake;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -47,6 +51,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Flywheel flywheel;
+  private final Intake intake;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -69,6 +74,7 @@ public class RobotContainer {
         // new ModuleIOSparkMax(2),
         // new ModuleIOSparkMax(3));
         flywheel = new Flywheel(new FlywheelIOSparkMax());
+        intake = new Intake();
         // drive = new Drive(
         // new GyroIOPigeon2(true),
         // new ModuleIOTalonFX(0),
@@ -151,6 +157,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    controller.a().whileTrue(new IntakeCommand(intake));
+    controller.b().whileTrue(new IntakeReverse(intake));
+
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
@@ -159,7 +169,7 @@ public class RobotContainer {
             () -> -controller.getRightX()));
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     controller
-        .b()
+        .y()
         .onTrue(
             Commands.runOnce(
                     () ->
