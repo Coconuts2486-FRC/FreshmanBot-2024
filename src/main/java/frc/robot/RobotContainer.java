@@ -17,11 +17,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
@@ -50,6 +52,9 @@ public class RobotContainer {
   private final Drive drive;
   private final Flywheel flywheel;
   private final Intake2 intake = new Intake2();
+  private final DigitalInput intakeStop = new DigitalInput(0);
+  private Trigger exampleTrigger = new Trigger(intakeStop::get);
+  ;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -79,6 +84,7 @@ public class RobotContainer {
         // new ModuleIOTalonFX(1),
         // new ModuleIOTalonFX(2),
         // new ModuleIOTalonFX(3));
+
         flywheel = new Flywheel(new FlywheelIOTalonFX());
         drive =
             new Drive(
@@ -156,18 +162,34 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    // new IntakeCommand(intake, () -> controller.getRightTriggerAxis(), () ->
-    // controller.getLeftTriggerAxis());
+    
+
+   //intake  
 
     controller
         .rightBumper()
-        .whileTrue(new IntakeCommand(intake, 0.5, 0.0))
-        .whileFalse(new IntakeCommand(intake, 0.0, 0.0));
+        .whileFalse(
+            new IntakeCommand(
+                intake,
+                () -> controller.getRightTriggerAxis(),
+                () -> controller.getLeftTriggerAxis()))
+        .whileTrue(new IntakeCommand(intake, () -> 0.5, () -> 0));
+
+    exampleTrigger.whileTrue(
+        new IntakeCommand(
+            intake, () -> controller.getRightTriggerAxis(), () -> controller.getLeftTriggerAxis()));
 
     controller
         .leftBumper()
-        .whileTrue(new IntakeCommand(intake, -0.5, 0.0))
-        .whileFalse(new IntakeCommand(intake, 0.0, 0.0));
+        .whileFalse(
+            new IntakeCommand(
+                intake,
+                () -> controller.getRightTriggerAxis(),
+                () -> controller.getLeftTriggerAxis()))
+        .whileTrue(new IntakeCommand(intake, () -> -0.5, () -> 0));
+
+
+
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(

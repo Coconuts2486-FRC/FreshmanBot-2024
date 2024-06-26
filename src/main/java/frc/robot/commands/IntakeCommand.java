@@ -6,13 +6,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake2;
+import java.util.function.DoubleSupplier;
 
 public class IntakeCommand extends Command {
   private final Intake2 m_subsystem;
-  private final Double rightTrigger;
-  private final Double leftTrigger;
+  private final DoubleSupplier rightTrigger;
+  private final DoubleSupplier leftTrigger;
 
-  public IntakeCommand(Intake2 subsystem, Double rightTrigger, Double leftTrigger) {
+  public IntakeCommand(Intake2 subsystem, DoubleSupplier rightTrigger, DoubleSupplier leftTrigger) {
     m_subsystem = subsystem;
     this.rightTrigger = rightTrigger;
     this.leftTrigger = leftTrigger;
@@ -23,7 +24,7 @@ public class IntakeCommand extends Command {
 
   @Override
   public void execute() {
-    Intake2.intakeFunction(rightTrigger, -leftTrigger);
+    Intake2.intakeFunction(rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
   }
 
   @Override
