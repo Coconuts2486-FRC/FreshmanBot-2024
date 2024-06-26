@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.IntakeReverse;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -35,9 +34,8 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIO;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
-import frc.robot.subsystems.flywheel.FlywheelIOSparkMax;
-import frc.robot.subsystems.intake.Intake;
-
+import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
+import frc.robot.subsystems.intake.Intake2;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -51,7 +49,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Flywheel flywheel;
-  private final Intake intake;
+  private final Intake2 intake = new Intake2();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -65,6 +63,7 @@ public class RobotContainer {
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL:
+
         // Real robot, instantiate hardware IO implementations
         // drive =
         // new Drive(
@@ -73,15 +72,14 @@ public class RobotContainer {
         // new ModuleIOSparkMax(1),
         // new ModuleIOSparkMax(2),
         // new ModuleIOSparkMax(3));
-        flywheel = new Flywheel(new FlywheelIOSparkMax());
-        intake = new Intake();
+        // flywheel = new Flywheel(new FlywheelIOSparkMax());
         // drive = new Drive(
         // new GyroIOPigeon2(true),
         // new ModuleIOTalonFX(0),
         // new ModuleIOTalonFX(1),
         // new ModuleIOTalonFX(2),
         // new ModuleIOTalonFX(3));
-        // flywheel = new Flywheel(new FlywheelIOTalonFX());
+        flywheel = new Flywheel(new FlywheelIOTalonFX());
         drive =
             new Drive(
                 new GyroIOPigeon2(),
@@ -158,8 +156,18 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    controller.a().whileTrue(new IntakeCommand(intake));
-    controller.b().whileTrue(new IntakeReverse(intake));
+    // new IntakeCommand(intake, () -> controller.getRightTriggerAxis(), () ->
+    // controller.getLeftTriggerAxis());
+
+    controller
+        .rightBumper()
+        .whileTrue(new IntakeCommand(intake, 0.5, 0.0))
+        .whileFalse(new IntakeCommand(intake, 0.0, 0.0));
+
+    controller
+        .leftBumper()
+        .whileTrue(new IntakeCommand(intake, -0.5, 0.0))
+        .whileFalse(new IntakeCommand(intake, 0.0, 0.0));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(

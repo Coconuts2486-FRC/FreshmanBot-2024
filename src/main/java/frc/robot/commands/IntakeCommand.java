@@ -5,13 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake2;
 
 public class IntakeCommand extends Command {
-  private final Intake m_subsystem;
+  private final Intake2 m_subsystem;
+  private final Double rightTrigger;
+  private final Double leftTrigger;
 
-  public IntakeCommand(Intake subsystem) {
+  public IntakeCommand(Intake2 subsystem, Double rightTrigger, Double leftTrigger) {
     m_subsystem = subsystem;
+    this.rightTrigger = rightTrigger;
+    this.leftTrigger = leftTrigger;
   }
 
   @Override
@@ -19,11 +23,9 @@ public class IntakeCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.turnOn();
+    Intake2.intakeFunction(rightTrigger, -leftTrigger);
   }
 
   @Override
-  public void end(boolean interrupted) {
-    m_subsystem.turnOff();
-  }
+  public void end(boolean interrupted) {}
 }
