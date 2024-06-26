@@ -15,8 +15,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -162,34 +160,39 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    
+    // intake
 
-   //intake  
+    // exampleTrigger.whileTrue(
+    //   new IntakeCommand(
+    //     intake, () -> controller.getRightTriggerAxis(), () -> controller.getLeftTriggerAxis()));
 
     controller
         .rightBumper()
         .whileFalse(
             new IntakeCommand(
                 intake,
+                () -> 0,
+                () -> 0,
                 () -> controller.getRightTriggerAxis(),
-                () -> controller.getLeftTriggerAxis()))
-        .whileTrue(new IntakeCommand(intake, () -> 0.5, () -> 0));
-
-    exampleTrigger.whileTrue(
-        new IntakeCommand(
-            intake, () -> controller.getRightTriggerAxis(), () -> controller.getLeftTriggerAxis()));
+                () -> controller.getLeftTriggerAxis(),
+                () -> intakeStop.get()))
+        .whileTrue(
+            new IntakeCommand(
+                intake, () -> 0.5, () -> 0, () -> 0, () -> 0, () -> intakeStop.get()));
 
     controller
         .leftBumper()
         .whileFalse(
             new IntakeCommand(
                 intake,
+                () -> 0,
+                () -> 0,
                 () -> controller.getRightTriggerAxis(),
-                () -> controller.getLeftTriggerAxis()))
-        .whileTrue(new IntakeCommand(intake, () -> -0.5, () -> 0));
-
-
-
+                () -> controller.getLeftTriggerAxis(),
+                () -> intakeStop.get()))
+        .whileTrue(
+            new IntakeCommand(
+                intake, () -> -0.5, () -> 0, () -> 0, () -> 0, () -> intakeStop.get()));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -198,15 +201,17 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    controller
-        .y()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+    // controller
+    //     .y()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //                 () ->
+    //                     drive.setPose(
+    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+    //                 drive)
+    //             .ignoringDisable(true));
+
+    controller.y().onTrue(Commands.runOnce(() -> drive.zero(), drive));
     controller
         .a()
         .whileTrue(

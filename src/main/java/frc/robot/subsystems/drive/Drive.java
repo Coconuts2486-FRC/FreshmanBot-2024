@@ -258,6 +258,10 @@ public class Drive extends SubsystemBase {
     poseEstimator.addVisionMeasurement(visionPose, timestamp);
   }
 
+  public void zero() {
+    gyroIO.zero();
+  }
+
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
     return MAX_LINEAR_SPEED;

@@ -6,17 +6,31 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake2;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class IntakeCommand extends Command {
   private final Intake2 m_subsystem;
   private final DoubleSupplier rightTrigger;
   private final DoubleSupplier leftTrigger;
+  private final DoubleSupplier rightBumper;
+  private final DoubleSupplier leftBumper;
 
-  public IntakeCommand(Intake2 subsystem, DoubleSupplier rightTrigger, DoubleSupplier leftTrigger) {
+  private final BooleanSupplier limit;
+
+  public IntakeCommand(
+      Intake2 subsystem,
+      DoubleSupplier rightBumper,
+      DoubleSupplier leftBummper,
+      DoubleSupplier rightTrigger,
+      DoubleSupplier leftTrigger,
+      BooleanSupplier limit) {
     m_subsystem = subsystem;
+    this.rightBumper = rightBumper;
+    this.leftBumper = leftBummper;
     this.rightTrigger = rightTrigger;
     this.leftTrigger = leftTrigger;
+    this.limit = limit;
   }
 
   @Override
@@ -24,7 +38,15 @@ public class IntakeCommand extends Command {
 
   @Override
   public void execute() {
-    Intake2.intakeFunction(rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
+    if (limit.getAsBoolean() == true) {
+      Intake2.intakeFunction(0, 0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
+    } else {
+      Intake2.intakeFunction(
+          rightBumper.getAsDouble(),
+          leftBumper.getAsDouble(),
+          rightTrigger.getAsDouble(),
+          -leftTrigger.getAsDouble());
+    }
   }
 
   @Override
