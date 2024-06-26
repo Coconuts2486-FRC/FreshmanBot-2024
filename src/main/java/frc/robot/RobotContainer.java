@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.subsystems.ampmech.roller;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -49,6 +50,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Flywheel flywheel;
+  private final roller roller = new roller();
   private final Intake2 intake = new Intake2();
   private final DigitalInput intakeStop = new DigitalInput(0);
   private Trigger exampleTrigger = new Trigger(intakeStop::get);
@@ -170,29 +172,27 @@ public class RobotContainer {
         .rightBumper()
         .whileFalse(
             new IntakeCommand(
+                roller,
                 intake,
-                () -> 0,
-                () -> 0,
+                0,
                 () -> controller.getRightTriggerAxis(),
                 () -> controller.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(
-                intake, () -> 0.5, () -> 0, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
     controller
         .leftBumper()
         .whileFalse(
             new IntakeCommand(
+                roller,
                 intake,
-                () -> 0,
-                () -> 0,
+                0,
                 () -> controller.getRightTriggerAxis(),
                 () -> controller.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(
-                intake, () -> -0.5, () -> 0, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
