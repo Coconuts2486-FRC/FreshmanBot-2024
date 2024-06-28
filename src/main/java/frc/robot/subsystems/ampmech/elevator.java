@@ -11,4 +11,8 @@ public class elevator {
 
     elevatorMotor = new CANSparkMax(20, MotorType.kBrushless); // 5:1
   }
+
+  public static void elevatorFunction(double speed) {
+    elevatorMotor.set(speed);
+  }
 }

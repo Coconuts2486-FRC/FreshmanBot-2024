@@ -23,8 +23,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AmpmechCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -50,14 +52,17 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Flywheel flywheel;
+  private final elevator elevator = new elevator();
   private final roller roller = new roller();
   private final Intake2 intake = new Intake2();
   private final DigitalInput intakeStop = new DigitalInput(0);
+  private final DigitalInput elevatorStop = new DigitalInput(1);
   private Trigger exampleTrigger = new Trigger(intakeStop::get);
+  private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
   ;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController driver = new CommandXboxController(0);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -162,45 +167,40 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    driver.a().toggleOnTrue(new AmpmechCommands(elevator, elevatorStop::get, 0.5));
+
     // intake
 
-    // exampleTrigger.whileTrue(
-    //   new IntakeCommand(
-    //     intake, () -> controller.getRightTriggerAxis(), () -> controller.getLeftTriggerAxis()));
-
-    controller
+    driver
         .rightBumper()
         .whileFalse(
             new IntakeCommand(
                 roller,
                 intake,
                 0,
-                () -> controller.getRightTriggerAxis(),
-                () -> controller.getLeftTriggerAxis(),
+                () -> driver.getRightTriggerAxis(),
+                () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
             new IntakeCommand(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
-    controller
+    driver
         .leftBumper()
         .whileFalse(
             new IntakeCommand(
                 roller,
                 intake,
                 0,
-                () -> controller.getRightTriggerAxis(),
-                () -> controller.getLeftTriggerAxis(),
+                () -> driver.getRightTriggerAxis(),
+                () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
             new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+            drive, () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+    driver.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     // controller
     //     .y()
     //     .onTrue(
@@ -211,8 +211,8 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
 
-    controller.y().onTrue(Commands.runOnce(() -> drive.zero(), drive));
-    controller
+    driver.y().onTrue(Commands.runOnce(() -> drive.zero(), drive));
+    driver
         .a()
         .whileTrue(
             Commands.startEnd(
