@@ -18,7 +18,8 @@ public class AmpmechCommands extends Command {
 
   @Override
   public void execute() {
-    if (stop.getAsBoolean() == false) {
+
+    if (stop.getAsBoolean() == true) {
       elevator.elevatorFunction(speed);
     } else {
       elevator.elevatorFunction(0);

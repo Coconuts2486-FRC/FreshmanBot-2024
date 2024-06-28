@@ -57,8 +57,11 @@ public class RobotContainer {
   private final Intake2 intake = new Intake2();
   private final DigitalInput intakeStop = new DigitalInput(0);
   private final DigitalInput elevatorStop = new DigitalInput(1);
+  private final DigitalInput elevatorStop2 = new DigitalInput(2);
   private Trigger exampleTrigger = new Trigger(intakeStop::get);
   private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
+  private Trigger elevatorTrigger2 = new Trigger(elevatorStop2::get);
+  public static int ampmechPart = 0;
   ;
 
   // Controller
@@ -168,6 +171,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     driver.a().toggleOnTrue(new AmpmechCommands(elevator, elevatorStop::get, 0.5));
+    
 
     // intake
 
