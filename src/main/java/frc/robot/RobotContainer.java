@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AmpmechCommands;
+import frc.robot.commands.AmpmechCommands2;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.ampmech.elevator;
@@ -61,7 +62,7 @@ public class RobotContainer {
   private Trigger exampleTrigger = new Trigger(intakeStop::get);
   private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
   private Trigger elevatorTrigger2 = new Trigger(elevatorStop2::get);
-  public static int ampmechPart = 0;
+ public static int ampmechStep = 0;
   ;
 
   // Controller
@@ -170,8 +171,15 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    driver.a().toggleOnTrue(new AmpmechCommands(elevator, elevatorStop::get, 0.5));
-    
+    driver
+        .a()
+        .toggleOnTrue(
+            new AmpmechCommands(elevator, elevatorTrigger, elevatorTrigger2, 0.5).withTimeout(3));
+
+    driver
+        .a()
+        .toggleOnTrue(
+            new AmpmechCommands2(elevator, elevatorTrigger, elevatorTrigger2, -0.5).withTimeout(3));
 
     // intake
 

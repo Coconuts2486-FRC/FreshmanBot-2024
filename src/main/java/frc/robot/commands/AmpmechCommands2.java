@@ -5,14 +5,14 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.ampmech.elevator;
 import java.util.function.BooleanSupplier;
 
-public class AmpmechCommands extends Command {
+public class AmpmechCommands2 extends Command {
 
   private BooleanSupplier stop2;
   private BooleanSupplier stop;
   private final elevator m_subsystem;
   private double speed;
 
-  public AmpmechCommands(
+  public AmpmechCommands2(
       elevator m_subsystem, BooleanSupplier stop, BooleanSupplier stop2, double speed) {
     this.stop = stop;
     this.m_subsystem = m_subsystem;
@@ -22,23 +22,14 @@ public class AmpmechCommands extends Command {
 
   @Override
   public void execute() {
-    if (RobotContainer.ampmechStep == 0) {
-      if (stop.getAsBoolean() == true) {
-        elevator.elevatorFunction(0.5);
+
+    if (RobotContainer.ampmechStep == 1) {
+      if (stop2.getAsBoolean() == false) {
+        elevator.elevatorFunction(-0.5);
       } else {
         elevator.elevatorFunction(0);
-        RobotContainer.ampmechStep = 1;
+        RobotContainer.ampmechStep = 0;
       }
     }
-  }
-
-  @Override
-  public String toString() {
-    return "AmpmechCommands []";
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    elevator.elevatorFunction(0);
   }
 }
