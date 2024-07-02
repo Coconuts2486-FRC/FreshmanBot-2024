@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AmpmechCommands;
-import frc.robot.commands.AmpmechCommands2;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.ampmech.elevator;
@@ -59,10 +58,10 @@ public class RobotContainer {
   private final DigitalInput intakeStop = new DigitalInput(0);
   private final DigitalInput elevatorStop = new DigitalInput(1);
   private final DigitalInput elevatorStop2 = new DigitalInput(2);
-  private Trigger exampleTrigger = new Trigger(intakeStop::get);
+  private Trigger intakeTrigger = new Trigger(intakeStop::get);
   private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
   private Trigger elevatorTrigger2 = new Trigger(elevatorStop2::get);
- public static int ampmechStep = 0;
+  public static int ampmechStep = 0;
   ;
 
   // Controller
@@ -174,12 +173,8 @@ public class RobotContainer {
     driver
         .a()
         .toggleOnTrue(
-            new AmpmechCommands(elevator, elevatorTrigger, elevatorTrigger2, 0.5).withTimeout(3));
-
-    driver
-        .a()
-        .toggleOnTrue(
-            new AmpmechCommands2(elevator, elevatorTrigger, elevatorTrigger2, -0.5).withTimeout(3));
+            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, +1)
+                .withTimeout(5));
 
     // intake
 
