@@ -64,8 +64,8 @@ public class RobotContainer {
   private Trigger intakeTrigger = new Trigger(intakeStop::get);
   private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
   private Trigger elevatorTrigger2 = new Trigger(elevatorStop2::get);
-  public static int ampmechStep = 0;
-  ;
+
+  
 
   // Controller
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -174,14 +174,15 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    //ampmech
     driver
         .a()
         .toggleOnTrue(
-            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, +1)
+            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2)
                 .withTimeout(5));
 
     // intake
-
+    
     driver
         .rightBumper()
         .whileFalse(
@@ -195,6 +196,7 @@ public class RobotContainer {
         .whileTrue(
             new IntakeCommand(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
+    //outtake
     driver
         .leftBumper()
         .whileFalse(
@@ -208,6 +210,7 @@ public class RobotContainer {
         .whileTrue(
             new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
     climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
+    //drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive, () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
@@ -222,6 +225,8 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
 
+
+    //gryo reset button
     driver.y().onTrue(Commands.runOnce(() -> drive.zero(), drive));
     driver
         .a()
