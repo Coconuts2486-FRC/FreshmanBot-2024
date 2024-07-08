@@ -67,6 +67,9 @@ public class ModuleIONutBlend implements ModuleIO {
    * Based on the ModuleIOTalonFX module, with the SparkMax components
    * added in appropriately.
    */
+
+   // All NEOS are tuned correctly, shouldnt need changes
+   // It was in radions
   public ModuleIONutBlend(int index) {
     switch (index) {
       case 0: // FL

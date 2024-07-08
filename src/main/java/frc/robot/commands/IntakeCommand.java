@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,6 +6,7 @@ import frc.robot.subsystems.intake.Intake2;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+// Suppliers
 public class IntakeCommand extends Command {
   private final Intake2 m_subsystem;
   private final DoubleSupplier rightTrigger;
@@ -35,6 +32,10 @@ public class IntakeCommand extends Command {
   @Override
   public void initialize() {}
 
+  /*
+   * This is checking for when the triggers are pressed
+   * And how far they are pressed down equals the speed 
+   */
   @Override
   public void execute() {
     if (limit.getAsBoolean() == true) {
