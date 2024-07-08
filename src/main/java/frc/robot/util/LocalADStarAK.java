@@ -15,6 +15,8 @@ import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
+// Looks like Auto stuff
+
 // NOTE: This file is available at
 // https://gist.github.com/mjansen4857/a8024b55eb427184dbd10ae8923bd57d
 

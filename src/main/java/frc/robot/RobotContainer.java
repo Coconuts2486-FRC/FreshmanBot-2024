@@ -11,6 +11,8 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+// Do we need all the copyrights? If not I'll delete 'em
+
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -24,10 +26,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AmpmechCommands;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
+import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -42,15 +46,12 @@ import frc.robot.subsystems.intake.Intake2;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
- */
+
+
 public class RobotContainer {
-  // Subsystems
+// Subsystems
   private final Drive drive;
+  private final Climb climb = new Climb();
   private final Flywheel flywheel;
   private final elevator elevator = new elevator();
   private final roller roller = new roller();
@@ -64,10 +65,11 @@ public class RobotContainer {
 
   
 
-  // Controller
+// Controller Setups
   private final CommandXboxController driver = new CommandXboxController(0);
+  private final CommandXboxController codriver = new CommandXboxController(1);
 
-  // Dashboard inputs
+// Dashboard Inputs
   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardNumber flywheelSpeedInput =
       new LoggedDashboardNumber("Flywheel Speed", 1500.0);
@@ -93,6 +95,11 @@ public class RobotContainer {
         // new ModuleIOTalonFX(2),
         // new ModuleIOTalonFX(3));
 
+        /*
+         * Do we have a flywheel?
+         * And whats a flywheel?
+         * Otherwise I dont think this code is being used
+         */
         flywheel = new Flywheel(new FlywheelIOTalonFX());
         drive =
             new Drive(
@@ -170,14 +177,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    //ampmech
+//ampmech Command
     driver
         .a()
         .toggleOnTrue(
             new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2)
                 .withTimeout(5));
 
-    // intake
+// Intake Command
     
     driver
         .rightBumper()
@@ -192,7 +199,7 @@ public class RobotContainer {
         .whileTrue(
             new IntakeCommand(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
-    //outtake
+//Outtake Command
     driver
         .leftBumper()
         .whileFalse(
@@ -206,23 +213,26 @@ public class RobotContainer {
         .whileTrue(
             new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
-    //drive
+// Climb Command     
+    climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
+
+//Drive Command
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive, () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
     driver.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    // controller
-    //     .y()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPose(
-    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-    //                 drive)
-    //             .ignoringDisable(true));
+    /* controller
+    *   .y()
+    *     .onTrue(
+    *         Commands.runOnce(
+    *                 () ->
+    *                     drive.setPose(
+    *                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+    *                drive)
+               .ignoringDisable(true));  */ 
 
 
-    //gryo reset button
+    //Gryo reset button
     driver.y().onTrue(Commands.runOnce(() -> drive.zero(), drive));
     driver
         .a()

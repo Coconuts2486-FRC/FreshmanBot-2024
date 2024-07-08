@@ -41,7 +41,7 @@ public class DriveCommands {
       DoubleSupplier omegaSupplier) {
     return Commands.run(
         () -> {
-          // Apply deadband
+          // This applys deadband
           double linearMagnitude =
               MathUtil.applyDeadband(
                   Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), DEADBAND);

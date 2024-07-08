@@ -32,10 +32,7 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+// Intailazation Code
   @Override
   public void robotInit() {
     // Record metadata
@@ -100,7 +97,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
   }
 
-  /** This function is called once when the robot is disabled. */
+  // Calls when disabled once
   @Override
   public void disabledInit() {}
 
