@@ -3,11 +3,14 @@
   "robotLength": 0.81,
   "holonomicMode": true,
   "pathFolders": [
+    "New Folder",
     "four note",
     "making things work"
   ],
   "autoFolders": [
+    "New Folder",
     "four note",
+    "get it working",
     "making things work"
   ],
   "defaultMaxVel": 5.0,

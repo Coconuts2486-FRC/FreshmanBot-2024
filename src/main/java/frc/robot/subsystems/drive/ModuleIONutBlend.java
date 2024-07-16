@@ -73,27 +73,27 @@ public class ModuleIONutBlend implements ModuleIO {
   public ModuleIONutBlend(int index) {
     switch (index) {
       case 0: // FL
-        driveTalon = new TalonFX(0);
+        driveTalon = new TalonFX(0, "Canivore");
         turnSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-        cancoder = new CANcoder(2);
+        cancoder = new CANcoder(2, "Canivore");
         absoluteEncoderOffset = new Rotation2d(-0.17631728); // MUST BE CALIBRATED
         break;
       case 1: // FR
-        driveTalon = new TalonFX(3);
+        driveTalon = new TalonFX(3, "Canivore");
         turnSparkMax = new CANSparkMax(4, MotorType.kBrushless);
-        cancoder = new CANcoder(5);
+        cancoder = new CANcoder(5, "Canivore");
         absoluteEncoderOffset = new Rotation2d(0.72060488); // MUST BE CALIBRATED
         break;
       case 2: // BL
-        driveTalon = new TalonFX(6);
+        driveTalon = new TalonFX(6, "Canivore");
         turnSparkMax = new CANSparkMax(7, MotorType.kBrushless);
-        cancoder = new CANcoder(8);
+        cancoder = new CANcoder(8, "Canivore");
         absoluteEncoderOffset = new Rotation2d(0.57648516); // MUST BE CALIBRATED
         break;
       case 3: // BR
-        driveTalon = new TalonFX(9);
+        driveTalon = new TalonFX(9, "Canivore");
         turnSparkMax = new CANSparkMax(10, MotorType.kBrushless);
-        cancoder = new CANcoder(11);
+        cancoder = new CANcoder(11, "Canivore");
         absoluteEncoderOffset = new Rotation2d(-0.55655244); // MUST BE CALIBRATED
         break;
       default:

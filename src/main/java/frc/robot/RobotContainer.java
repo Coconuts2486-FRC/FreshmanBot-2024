@@ -191,7 +191,7 @@ public class RobotContainer {
         .a()
         .toggleOnTrue(
             new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0)
-                .withTimeout(3));
+                .withTimeout(5));
 
     // driver
     //     .a()
@@ -219,7 +219,7 @@ public class RobotContainer {
                 () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
     // Outtake Command
     driver
@@ -233,7 +233,7 @@ public class RobotContainer {
                 () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(roller, intake, -0.33, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
     // Climb Command
     // climb.setDefaultCommand(new ClimbCommand(climb, () -> codriver.getRightY()));

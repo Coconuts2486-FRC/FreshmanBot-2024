@@ -49,7 +49,7 @@ public class AmpmechCommands extends Command {
 
     if (step == 1) {
       if (stop.getAsBoolean() == true) {
-        elevator.elevatorFunction(-0.25);
+        elevator.elevatorFunction(-0.50);
       } else {
         elevator.elevatorFunction(0);
 
@@ -63,13 +63,13 @@ public class AmpmechCommands extends Command {
         roller.rollerFunction(0, 0, 0);
         step = 3;
       } else {
-        roller.rollerFunction(-0.5, 0, 0);
+        roller.rollerFunction(-0.75, 0, 0);
       }
     }
 
     if (step == 3) {
       if (stop2.getAsBoolean() == true) {
-        elevator.elevatorFunction(0.25);
+        elevator.elevatorFunction(0.33);
       } else {
         elevator.elevatorFunction(0);
       }
