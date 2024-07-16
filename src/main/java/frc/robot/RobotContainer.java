@@ -17,6 +17,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -78,22 +79,7 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
 
-        // Real robot, instantiate hardware IO implementations
-        // drive =
-        // new Drive(
-        // new GyroIOPigeon2(false),
-        // new ModuleIOSparkMax(0),
-        // new ModuleIOSparkMax(1),
-        // new ModuleIOSparkMax(2),
-        // new ModuleIOSparkMax(3));
-        // flywheel = new Flywheel(new FlywheelIOSparkMax());
-        // drive = new Drive(
-        // new GyroIOPigeon2(true),
-        // new ModuleIOTalonFX(0),
-        // new ModuleIOTalonFX(1),
-        // new ModuleIOTalonFX(2),
-        // new ModuleIOTalonFX(3));
-
+        // Real robot, instantiate hardware IO implementation
         /*
          * Do we have a flywheel?
          * And whats a flywheel?
@@ -107,6 +93,7 @@ public class RobotContainer {
                 new ModuleIONutBlend(1),
                 new ModuleIONutBlend(2),
                 new ModuleIONutBlend(3));
+        drive.setPose(new Pose2d());
         break;
 
       case SIM:
