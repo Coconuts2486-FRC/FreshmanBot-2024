@@ -5,18 +5,12 @@
       "x": 1.2587578200067437,
       "y": 5.531293435066112
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
         {
           "type": "parallel",
           "data": {
@@ -25,12 +19,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "note 1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "runIntake"
                 }
               }
             ]

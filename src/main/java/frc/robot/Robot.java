@@ -118,7 +118,6 @@ public class Robot extends LoggedRobot {
 
     prevXAccel = xAccel;
     prevYAccel = yAccel;
-    
   }
 
   // Calls when disabled once

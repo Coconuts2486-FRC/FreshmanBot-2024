@@ -143,7 +143,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand(
         "runIntake",
-        new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
+        new IntakeCommand(roller, intake, 0.6, () -> 0, () -> 0, () -> intakeStop.get()));
 
     NamedCommands.registerCommand(
         "shoot",
