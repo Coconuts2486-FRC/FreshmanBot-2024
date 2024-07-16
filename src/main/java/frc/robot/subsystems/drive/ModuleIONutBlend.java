@@ -55,7 +55,7 @@ public class ModuleIONutBlend implements ModuleIO {
   private final StatusSignal<Double> turnAbsolutePosition;
   private final RelativeEncoder turnRelativeEncoder;
 
-  // Gear ratios for SDS MK4i L2, adjust as necessary
+  // Gear ratios for SDS MK4i L2 (installed on George)
   private final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
   private final double TURN_GEAR_RATIO = 150.0 / 7.0;
 

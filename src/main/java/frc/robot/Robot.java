@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -31,6 +32,11 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+
+  double prevXAccel = 0.0;
+  double prevYAccel = 0.0;
+
+  BuiltInAccelerometer accelerometer = new BuiltInAccelerometer();
 
   // Intailazation Code
   @Override
@@ -95,6 +101,24 @@ public class Robot extends LoggedRobot {
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    // Gets the current accelerations in the X and Y directions
+    double xAccel = accelerometer.getX();
+    double yAccel = accelerometer.getY();
+
+    // Calculates the jerk in the X and Y directions
+    // Divides by .02 because default loop timing is 20ms
+    double xJerk = (xAccel - prevXAccel) / 0.02;
+    double yJerk = (yAccel - prevYAccel) / 0.02;
+
+    Logger.recordOutput("xaccel", xAccel);
+    Logger.recordOutput("yaccel", yAccel);
+    Logger.recordOutput("xjerk", xJerk);
+    Logger.recordOutput("yjerk", yJerk);
+
+    prevXAccel = xAccel;
+    prevYAccel = yAccel;
+    
   }
 
   // Calls when disabled once
