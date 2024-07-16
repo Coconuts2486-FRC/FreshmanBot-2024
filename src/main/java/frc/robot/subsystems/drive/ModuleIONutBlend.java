@@ -68,8 +68,8 @@ public class ModuleIONutBlend implements ModuleIO {
    * added in appropriately.
    */
 
-   // All NEOS are tuned correctly, shouldnt need changes
-   // It was in radions
+  // All NEOS are tuned correctly, shouldnt need changes
+  // It was in radions
   public ModuleIONutBlend(int index) {
     switch (index) {
       case 0: // FL

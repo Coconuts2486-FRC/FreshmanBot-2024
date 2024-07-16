@@ -32,7 +32,7 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
-// Intailazation Code
+  // Intailazation Code
   @Override
   public void robotInit() {
     // Record metadata

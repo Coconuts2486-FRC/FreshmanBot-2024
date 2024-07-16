@@ -34,7 +34,7 @@ public class IntakeCommand extends Command {
 
   /*
    * This is checking for when the triggers are pressed
-   * And how far they are pressed down equals the speed 
+   * And how far they are pressed down equals the speed
    */
   @Override
   public void execute() {

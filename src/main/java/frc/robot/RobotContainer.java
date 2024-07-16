@@ -26,12 +26,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AmpmechCommands;
-import frc.robot.commands.ClimbCommand;
+// import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
+// import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
-import frc.robot.subsystems.climb.Climb;
+// import frc.robot.subsystems.climb.climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -43,19 +44,19 @@ import frc.robot.subsystems.flywheel.FlywheelIO;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
 import frc.robot.subsystems.intake.Intake2;
+// import frc.robot.subsystems.shooter.shooter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
-
-
 public class RobotContainer {
-// Subsystems
+  // Subsystems
   private final Drive drive;
-  private final Climb climb = new Climb();
+  //   private final climb climb = new climb();
   private final Flywheel flywheel;
   private final elevator elevator = new elevator();
   private final roller roller = new roller();
   private final Intake2 intake = new Intake2();
+  //   private final shooter shooter = new shooter();
   private final DigitalInput intakeStop = new DigitalInput(0);
   private final DigitalInput elevatorStop = new DigitalInput(1);
   private final DigitalInput elevatorStop2 = new DigitalInput(2);
@@ -63,13 +64,11 @@ public class RobotContainer {
   private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
   private Trigger elevatorTrigger2 = new Trigger(elevatorStop2::get);
 
-  
-
-// Controller Setups
+  // Controller Setups
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController codriver = new CommandXboxController(1);
 
-// Dashboard Inputs
+  // Dashboard Inputs
   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardNumber flywheelSpeedInput =
       new LoggedDashboardNumber("Flywheel Speed", 1500.0);
@@ -136,11 +135,21 @@ public class RobotContainer {
     }
 
     // Set up auto routines
+    // NamedCommands.registerCommand(
+    //     "Run Flywheel",
+    //     Commands.startEnd(
+    //             () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel)
+    //         .withTimeout(5.0));
+
     NamedCommands.registerCommand(
-        "Run Flywheel",
-        Commands.startEnd(
-                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel)
-            .withTimeout(5.0));
+        "runIntake",
+        new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
+
+    NamedCommands.registerCommand(
+        "shoot",
+        new IntakeCommand(roller, intake, 0, () -> 0.5, () -> 0, () -> intakeStop.get())
+            .withTimeout(1));
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
@@ -177,15 +186,28 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-//ampmech Command
+    // ampmech Command
     driver
         .a()
         .toggleOnTrue(
-            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2)
-                .withTimeout(5));
+            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0)
+                .withTimeout(3));
 
-// Intake Command
-    
+    // driver
+    //     .a()
+    //     .whileTrue(new AmpmechCommands(elevator, roller, elevatorTrigger2, elevatorTrigger,
+    // -0.5));
+    // driver
+    //     .b()
+    //     .whileTrue(new AmpmechCommands(elevator, roller, elevatorTrigger2, elevatorTrigger,
+    // 0.1));
+
+    // shooter command
+
+    // codriver.b().toggleOnTrue(new ShooterCommands(shooter, roller).withTimeout(3));
+
+    // Intake Command
+
     driver
         .rightBumper()
         .whileFalse(
@@ -197,9 +219,9 @@ public class RobotContainer {
                 () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
 
-//Outtake Command
+    // Outtake Command
     driver
         .leftBumper()
         .whileFalse(
@@ -211,12 +233,12 @@ public class RobotContainer {
                 () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, -0.33, () -> 0, () -> 0, () -> intakeStop.get()));
 
-// Climb Command     
-    climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
+    // Climb Command
+    // climb.setDefaultCommand(new ClimbCommand(climb, () -> codriver.getRightY()));
 
-//Drive Command
+    // Drive Command
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive, () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
@@ -229,16 +251,15 @@ public class RobotContainer {
     *                     drive.setPose(
     *                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
     *                drive)
-               .ignoringDisable(true));  */ 
+               .ignoringDisable(true));  */
 
-
-    //Gryo reset button
+    // Gryo reset button
     driver.y().onTrue(Commands.runOnce(() -> drive.zero(), drive));
-    driver
-        .a()
-        .whileTrue(
-            Commands.startEnd(
-                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel));
+    // driver
+    //     .a()
+    //     .whileTrue(
+    //         Commands.startEnd(
+    //             () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel));
   }
 
   /**
