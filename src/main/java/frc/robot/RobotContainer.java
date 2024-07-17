@@ -200,7 +200,7 @@ public class RobotContainer {
             new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
 // Climb Command     
-    climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
+    // climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
 
     // Drive Command
     drive.setDefaultCommand(
