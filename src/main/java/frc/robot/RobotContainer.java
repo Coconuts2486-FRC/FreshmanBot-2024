@@ -170,8 +170,8 @@ public class RobotContainer {
             new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0)
                 .withTimeout(5));
 
-// Intake Command
-    
+    // Intake Command
+
     driver
         .rightBumper()
         .whileFalse(
@@ -199,7 +199,7 @@ public class RobotContainer {
         .whileTrue(
             new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
-// Climb Command     
+    // Climb Command
     // climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
 
     // Drive Command
