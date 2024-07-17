@@ -17,15 +17,11 @@ public class AmpmechCommands extends Command {
   private static double timer;
 
   public AmpmechCommands(
-      elevator m_subsystem,
-      roller m_subsystem2,
-      BooleanSupplier stop,
-      BooleanSupplier stop2) {
+      elevator m_subsystem, roller m_subsystem2, BooleanSupplier stop, BooleanSupplier stop2) {
     this.stop = stop;
     this.m_subsystem = m_subsystem;
     this.m_subsystem2 = m_subsystem2;
     this.stop2 = stop2;
-
   }
 
   @Override
@@ -59,9 +55,7 @@ public class AmpmechCommands extends Command {
       } else {
         roller.rollerFunction(-0.5, 0, 0);
       }
-      
     }
-
 
     if (step == 3) {
       if (stop2.getAsBoolean() == true) {

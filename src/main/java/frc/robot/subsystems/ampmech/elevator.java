@@ -2,7 +2,8 @@ package frc.robot.subsystems.ampmech;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-//Already set up
+// Already set up
+
 public class elevator {
 
   private static CANSparkMax elevatorMotor;
