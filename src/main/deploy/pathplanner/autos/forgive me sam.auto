@@ -1,0 +1,38 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.282954626977957,
+      "y": 5.525086266457521
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "daer god"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "runIntake"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "making things work",
+  "choreoAuto": false
+}

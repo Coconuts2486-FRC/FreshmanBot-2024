@@ -27,9 +27,10 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
-  private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
-  private static final double TRACK_WIDTH_X = Units.inchesToMeters(25.0);
-  private static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
+  // Values for George, added 2024-Jul-16
+  private static final double MAX_LINEAR_SPEED = Units.feetToMeters(16.5);
+  private static final double TRACK_WIDTH_X = Units.inchesToMeters(20.75);
+  private static final double TRACK_WIDTH_Y = Units.inchesToMeters(20.75);
   private static final double DRIVE_BASE_RADIUS =
       Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
   private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
@@ -230,7 +231,13 @@ public class Drive extends SubsystemBase {
     return getPose().getRotation();
   }
 
-  /** Resets the current odometry pose. */
+  /**
+   * Resets the current odometry pose.
+   *
+   * <p>This method is called from PathPlanner's AutoBuilder class if a starting pose is defined in
+   * the auto path. It is unclear *when* the pose is reset (i.e., at initialization of the robot or
+   * start of autonomous or simply whenever the auto path is selected in the Dashboard).
+   */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }

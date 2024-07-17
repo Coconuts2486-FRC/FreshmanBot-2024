@@ -17,6 +17,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -26,12 +27,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AmpmechCommands;
-import frc.robot.commands.ClimbCommand;
+// import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
+// import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
-import frc.robot.subsystems.climb.Climb;
+// import frc.robot.subsystems.climb.climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -43,17 +45,19 @@ import frc.robot.subsystems.flywheel.FlywheelIO;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
 import frc.robot.subsystems.intake.Intake2;
+// import frc.robot.subsystems.shooter.shooter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  private final Climb climb = new Climb();
+  //   private final climb climb = new climb();
   private final Flywheel flywheel;
   private final elevator elevator = new elevator();
   private final roller roller = new roller();
   private final Intake2 intake = new Intake2();
+  //   private final shooter shooter = new shooter();
   private final DigitalInput intakeStop = new DigitalInput(0);
   private final DigitalInput elevatorStop = new DigitalInput(1);
   private final DigitalInput elevatorStop2 = new DigitalInput(2);
@@ -75,22 +79,7 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
 
-        // Real robot, instantiate hardware IO implementations
-        // drive =
-        // new Drive(
-        // new GyroIOPigeon2(false),
-        // new ModuleIOSparkMax(0),
-        // new ModuleIOSparkMax(1),
-        // new ModuleIOSparkMax(2),
-        // new ModuleIOSparkMax(3));
-        // flywheel = new Flywheel(new FlywheelIOSparkMax());
-        // drive = new Drive(
-        // new GyroIOPigeon2(true),
-        // new ModuleIOTalonFX(0),
-        // new ModuleIOTalonFX(1),
-        // new ModuleIOTalonFX(2),
-        // new ModuleIOTalonFX(3));
-
+        // Real robot, instantiate hardware IO implementation
         /*
          * Do we have a flywheel?
          * And whats a flywheel?
@@ -104,6 +93,7 @@ public class RobotContainer {
                 new ModuleIONutBlend(1),
                 new ModuleIONutBlend(2),
                 new ModuleIONutBlend(3));
+        drive.setPose(new Pose2d());
         break;
 
       case SIM:
@@ -132,18 +122,11 @@ public class RobotContainer {
     }
 
     // Set up auto routines
-    // NamedCommands.registerCommand(
-    //     "Run Flywheel",
-    //     Commands.startEnd(
-    //             () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel)
-    //         .withTimeout(5.0));
-
     NamedCommands.registerCommand(
-        "Run Intake",
+        "Run Flywheel",
         Commands.startEnd(
-                () -> Intake2.intakeFunction(0.5, 0, 0),() -> Intake2.intakeFunction(0, 0, 0), intake)
-            .withTimeout(5));
-
+                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel)
+            .withTimeout(5.0));
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
@@ -184,11 +167,11 @@ public class RobotContainer {
     driver
         .a()
         .toggleOnTrue(
-            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2)
+            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0)
                 .withTimeout(5));
 
-    // Intake Command
-
+// Intake Command
+    
     driver
         .rightBumper()
         .whileFalse(
@@ -216,8 +199,8 @@ public class RobotContainer {
         .whileTrue(
             new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
-    // Climb Command
-    climb.setDefaultCommand(new ClimbCommand(climb, () -> codriver.getRightY()));
+// Climb Command     
+    climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
 
     // Drive Command
     drive.setDefaultCommand(
@@ -236,11 +219,11 @@ public class RobotContainer {
 
     // Gryo reset button
     driver.y().onTrue(Commands.runOnce(() -> drive.zero(), drive));
-    driver
-        .a()
-        .whileTrue(
-            Commands.startEnd(
-                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel));
+    // driver
+    //     .a()
+    //     .whileTrue(
+    //         Commands.startEnd(
+    //             () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel));
   }
 
   /**
