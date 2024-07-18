@@ -122,11 +122,21 @@ public class RobotContainer {
     }
 
     // Set up auto routines
+    // NamedCommands.registerCommand(
+    //     "Run Flywheel",
+    //     Commands.startEnd(
+    //             () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel)
+    //         .withTimeout(5.0));
+
     NamedCommands.registerCommand(
-        "Run Flywheel",
-        Commands.startEnd(
-                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel)
-            .withTimeout(5.0));
+        "runIntake",
+        new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
+
+    NamedCommands.registerCommand(
+        "shoot",
+        new IntakeCommand(roller, intake, 0, () -> 0.5, () -> 0, () -> intakeStop.get())
+            .withTimeout(1));
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
@@ -170,8 +180,21 @@ public class RobotContainer {
             new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0)
                 .withTimeout(5));
 
-// Intake Command
-    
+    // driver
+    //     .a()
+    //     .whileTrue(new AmpmechCommands(elevator, roller, elevatorTrigger2, elevatorTrigger,
+    // -0.5));
+    // driver
+    //     .b()
+    //     .whileTrue(new AmpmechCommands(elevator, roller, elevatorTrigger2, elevatorTrigger,
+    // 0.1));
+
+    // shooter command
+
+    // codriver.b().toggleOnTrue(new ShooterCommands(shooter, roller).withTimeout(3));
+
+    // Intake Command
+
     driver
         .rightBumper()
         .whileFalse(
@@ -199,13 +222,13 @@ public class RobotContainer {
         .whileTrue(
             new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
-// Climb Command     
-    // climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
+    // Climb Command
+    // climb.setDefaultCommand(new ClimbCommand(climb, () -> codriver.getRightY()));
 
     // Drive Command
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive, () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+            drive, () -> driver.getLeftY(), () -> driver.getLeftX(), () -> driver.getRightX()));
     driver.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     /* controller
     *   .y()

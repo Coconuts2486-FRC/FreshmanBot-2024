@@ -46,4 +46,13 @@ public class GyroIOPigeon2 implements GyroIO {
   public void zero() {
     pigeon.setYaw(0);
   }
+
+  /**
+   * Reset the Pigeon2 to a specific value, usually at the start of Auto
+   *
+   * @param angle The specified angle in DEGREES
+   */
+  public void reset(double angle) {
+    pigeon.setYaw(angle);
+  }
 }
