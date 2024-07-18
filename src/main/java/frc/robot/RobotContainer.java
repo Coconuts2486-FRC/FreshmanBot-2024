@@ -180,19 +180,6 @@ public class RobotContainer {
             new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0)
                 .withTimeout(5));
 
-    // driver
-    //     .a()
-    //     .whileTrue(new AmpmechCommands(elevator, roller, elevatorTrigger2, elevatorTrigger,
-    // -0.5));
-    // driver
-    //     .b()
-    //     .whileTrue(new AmpmechCommands(elevator, roller, elevatorTrigger2, elevatorTrigger,
-    // 0.1));
-
-    // shooter command
-
-    // codriver.b().toggleOnTrue(new ShooterCommands(shooter, roller).withTimeout(3));
-
     // Intake Command
 
     driver
@@ -223,7 +210,7 @@ public class RobotContainer {
             new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
     // Climb Command
-    // climb.setDefaultCommand(new ClimbCommand(climb, () -> codriver.getRightY()));
+    // climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
 
     // Drive Command
     drive.setDefaultCommand(
