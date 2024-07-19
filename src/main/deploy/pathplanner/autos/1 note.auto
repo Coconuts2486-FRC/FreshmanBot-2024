@@ -12,9 +12,35 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              }
+            ]
           }
         },
         {
@@ -37,13 +63,32 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "path",
+          "data": {
+            "pathName": "return"
+          }
+        },
+        {
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "return"
+                  "name": "spinUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
                 }
               },
               {

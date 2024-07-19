@@ -16,7 +16,7 @@ public class SpinUpCommands extends Command {
 
   @Override
   public void execute() {
-    shooter.shooterFunction(0.5);
+    shooter.shooterFunction(0.75);
   }
 
   @Override

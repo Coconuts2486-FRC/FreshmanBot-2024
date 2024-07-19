@@ -12,9 +12,35 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              }
+            ]
           }
         },
         {
@@ -37,13 +63,32 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
                   "pathName": "amp 1 return"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
                 }
               },
               {
@@ -82,6 +127,25 @@
                 "type": "path",
                 "data": {
                   "pathName": "amp 2 return"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinUp"
                 }
               },
               {
