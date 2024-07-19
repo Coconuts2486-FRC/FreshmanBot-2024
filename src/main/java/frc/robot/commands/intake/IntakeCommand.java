@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ampmech.roller;
@@ -49,13 +49,4 @@ public class IntakeCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {}
-
-  @Override
-  public boolean isFinished() {
-    if (limit.getAsBoolean() == true) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 }

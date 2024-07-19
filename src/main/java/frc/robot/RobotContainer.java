@@ -29,9 +29,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AmpmechCommands;
 // import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.IntakeCommand2;
-import frc.robot.commands.ShooterCommands;
+import frc.robot.commands.intake.IntakeCommand;
+import frc.robot.commands.intake.IntakeCommandauto;
+import frc.robot.commands.shooter.ShooterCommands;
+import frc.robot.commands.shooter.SpinUpCommands;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
 // import frc.robot.subsystems.climb.climb;
@@ -131,10 +132,11 @@ public class RobotContainer {
 
     NamedCommands.registerCommand(
         "runIntake",
-        new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
+        new IntakeCommandauto(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
 
-    NamedCommands.registerCommand(
-        "shoot", new IntakeCommand2(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
+    NamedCommands.registerCommand("shoot", new ShooterCommands(roller));
+
+    NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter));
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -174,11 +176,11 @@ public class RobotContainer {
 
     // shooter commands
 
-    //spin up
-    codriver.rightBumper().whileTrue(new ShooterCommands(shooter, roller, 1));
-    
-    //shoot
-    codriver.leftBumper().toggleOnTrue(new ShooterCommands(shooter, roller, 2));
+    // spin up
+    codriver.rightBumper().whileTrue(new SpinUpCommands(shooter));
+
+    // shoot
+    codriver.leftBumper().toggleOnTrue(new ShooterCommands(roller));
 
     // ampmech Command
     driver

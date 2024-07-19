@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ampmech.roller;
@@ -7,7 +7,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 // Suppliers
-public class IntakeCommand2 extends Command {
+public class IntakeCommandauto extends Command {
   private final Intake2 m_subsystem;
   private final DoubleSupplier rightTrigger;
   private final DoubleSupplier leftTrigger;
@@ -15,7 +15,7 @@ public class IntakeCommand2 extends Command {
 
   private final BooleanSupplier limit;
 
-  public IntakeCommand2(
+  public IntakeCommandauto(
       roller subsystem2,
       Intake2 subsystem,
       double bumper,
@@ -38,7 +38,7 @@ public class IntakeCommand2 extends Command {
    */
   @Override
   public void execute() {
-    if (limit.getAsBoolean() == false) {
+    if (limit.getAsBoolean() == true) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     } else {
@@ -52,7 +52,7 @@ public class IntakeCommand2 extends Command {
 
   @Override
   public boolean isFinished() {
-    if (limit.getAsBoolean() == false) {
+    if (limit.getAsBoolean() == true) {
       return true;
     } else {
       return false;
