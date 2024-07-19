@@ -30,7 +30,8 @@ import frc.robot.commands.AmpmechCommands;
 // import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
-// import frc.robot.commands.ShooterCommands;
+import frc.robot.commands.IntakeCommand2;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
 // import frc.robot.subsystems.climb.climb;
@@ -45,7 +46,7 @@ import frc.robot.subsystems.flywheel.FlywheelIO;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
 import frc.robot.subsystems.intake.Intake2;
-// import frc.robot.subsystems.shooter.shooter;
+import frc.robot.subsystems.shooter.shooter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -57,7 +58,7 @@ public class RobotContainer {
   private final elevator elevator = new elevator();
   private final roller roller = new roller();
   private final Intake2 intake = new Intake2();
-  //   private final shooter shooter = new shooter();
+  private final shooter shooter = new shooter();
   private final DigitalInput intakeStop = new DigitalInput(0);
   private final DigitalInput elevatorStop = new DigitalInput(1);
   private final DigitalInput elevatorStop2 = new DigitalInput(2);
@@ -133,9 +134,7 @@ public class RobotContainer {
         new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
 
     NamedCommands.registerCommand(
-        "shoot",
-        new IntakeCommand(roller, intake, 0, () -> 0.5, () -> 0, () -> intakeStop.get())
-            .withTimeout(1));
+        "shoot", new IntakeCommand2(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -173,6 +172,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    // shooter commands
+
+    //spin up
+    codriver.rightBumper().whileTrue(new ShooterCommands(shooter, roller, 1));
+    
+    //shoot
+    codriver.leftBumper().toggleOnTrue(new ShooterCommands(shooter, roller, 2));
+
     // ampmech Command
     driver
         .a()
@@ -193,7 +200,7 @@ public class RobotContainer {
                 () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(roller, intake, 0.5, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
 
     // Outtake Command
     driver
@@ -207,7 +214,7 @@ public class RobotContainer {
                 () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(roller, intake, -0.5, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, -0.33, () -> 0, () -> 0, () -> intakeStop.get()));
 
     // Climb Command
     // climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
@@ -216,7 +223,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive, () -> driver.getLeftY(), () -> driver.getLeftX(), () -> driver.getRightX()));
-    driver.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // driver.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     /* controller
     *   .y()
     *     .onTrue(

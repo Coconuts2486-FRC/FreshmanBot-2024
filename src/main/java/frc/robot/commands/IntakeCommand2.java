@@ -7,7 +7,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 // Suppliers
-public class IntakeCommand extends Command {
+public class IntakeCommand2 extends Command {
   private final Intake2 m_subsystem;
   private final DoubleSupplier rightTrigger;
   private final DoubleSupplier leftTrigger;
@@ -15,7 +15,7 @@ public class IntakeCommand extends Command {
 
   private final BooleanSupplier limit;
 
-  public IntakeCommand(
+  public IntakeCommand2(
       roller subsystem2,
       Intake2 subsystem,
       double bumper,
@@ -38,7 +38,7 @@ public class IntakeCommand extends Command {
    */
   @Override
   public void execute() {
-    if (limit.getAsBoolean() == true) {
+    if (limit.getAsBoolean() == false) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     } else {
@@ -52,7 +52,7 @@ public class IntakeCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    if (limit.getAsBoolean() == true) {
+    if (limit.getAsBoolean() == false) {
       return true;
     } else {
       return false;

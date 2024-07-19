@@ -31,14 +31,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 /**
- * Module IO implementation for blended TalonFX drive motor controller, SparkMax
- * turn motor controller (NEO or NEO 550), and CANcoder.
+ * Module IO implementation for blended TalonFX drive motor controller, SparkMax turn motor
+ * controller (NEO or NEO 550), and CANcoder.
  *
- * <p>
- * To calibrate the absolute encoder offsets, point the modules straight (such
- * that forward motion on the drive motor will propel the robot forward) and
- * copy the reported values from the absolute encoders using AdvantageScope.
- * These values are logged under "/Drive/ModuleX/TurnAbsolutePositionRad"
+ * <p>To calibrate the absolute encoder offsets, point the modules straight (such that forward
+ * motion on the drive motor will propel the robot forward) and copy the reported values from the
+ * absolute encoders using AdvantageScope. These values are logged under
+ * "/Drive/ModuleX/TurnAbsolutePositionRad"
  */
 public class ModuleIONutBlend implements ModuleIO {
   // CAN Devices
@@ -144,18 +143,23 @@ public class ModuleIONutBlend implements ModuleIO {
     BaseStatusSignal.refreshAll(
         drivePosition, driveVelocity, driveAppliedVolts, driveCurrent, turnAbsolutePosition);
 
-    inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / DRIVE_GEAR_RATIO;
-    inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / DRIVE_GEAR_RATIO;
+    inputs.drivePositionRad =
+        Units.rotationsToRadians(drivePosition.getValueAsDouble()) / DRIVE_GEAR_RATIO;
+    inputs.driveVelocityRadPerSec =
+        Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / DRIVE_GEAR_RATIO;
     inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
-    inputs.driveCurrentAmps = new double[] { driveCurrent.getValueAsDouble() };
+    inputs.driveCurrentAmps = new double[] {driveCurrent.getValueAsDouble()};
 
-    inputs.turnAbsolutePosition = Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble())
-        .minus(absoluteEncoderOffset);
-    inputs.turnPosition = Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);
-    inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
-        / TURN_GEAR_RATIO;
+    inputs.turnAbsolutePosition =
+        Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble())
+            .minus(absoluteEncoderOffset);
+    inputs.turnPosition =
+        Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);
+    inputs.turnVelocityRadPerSec =
+        Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
+            / TURN_GEAR_RATIO;
     inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
-    inputs.turnCurrentAmps = new double[] { turnSparkMax.getOutputCurrent() };
+    inputs.turnCurrentAmps = new double[] {turnSparkMax.getOutputCurrent()};
   }
 
   @Override

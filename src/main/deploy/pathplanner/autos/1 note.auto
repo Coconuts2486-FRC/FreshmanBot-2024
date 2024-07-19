@@ -5,12 +5,18 @@
       "x": 1.2587578200067437,
       "y": 5.531293435066112
     },
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
         {
           "type": "parallel",
           "data": {
@@ -25,6 +31,25 @@
                 "type": "named",
                 "data": {
                   "name": "runIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "return"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
                 }
               }
             ]

@@ -1,24 +1,22 @@
-// package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooter;
 
-// import com.revrobotics.CANSparkLowLevel.MotorType;
-// import com.ctre.phoenix.motorcontrol.ControlMode;
-// import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-// import com.revrobotics.CANSparkMax;
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// public class shooter extends SubsystemBase {
+public class shooter extends SubsystemBase {
 
-//   private static TalonSRX shooterMotor1;
-//   private static TalonSRX shooterMotor2;
+  private static TalonSRX shooterMotor1;
+  private static TalonSRX shooterMotor2;
 
-//   public shooter() {
+  public shooter() {
 
-//     shooterMotor1 = new TalonSRX(67);
-//     shooterMotor2 = new TalonSRX(66);
-//   }
+    shooterMotor1 = new TalonSRX(25);
+    shooterMotor2 = new TalonSRX(26);
+  }
 
-//   public static void shooterFunction(double speed) {
-//     shooterMotor1.set(ControlMode.PercentOutput, speed);
-//     shooterMotor2.set(ControlMode.PercentOutput, speed);
-//   }
-// }
+  public static void shooterFunction(double speed) {
+    shooterMotor1.set(ControlMode.PercentOutput, speed);
+    shooterMotor2.set(ControlMode.PercentOutput, speed);
+  }
+}
