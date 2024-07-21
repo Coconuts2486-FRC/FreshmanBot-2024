@@ -2,8 +2,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ampmech.elevator;
-import frc.robot.subsystems.ampmech.roller;
+import frc.robot.subsystems.elevator.elevator;
+import frc.robot.subsystems.indexer.indexer;
+
 import java.util.function.BooleanSupplier;
 
 public class AmpmechCommands extends Command {
@@ -12,14 +13,14 @@ public class AmpmechCommands extends Command {
   private BooleanSupplier stop;
 
   private final elevator m_subsystem;
-  private final roller m_subsystem2;
+  private final indexer m_subsystem2;
   private int step = 1;
   private static double timer;
   private double test = 0;
 
   public AmpmechCommands(
       elevator m_subsystem,
-      roller m_subsystem2,
+      indexer m_subsystem2,
       BooleanSupplier stop,
       BooleanSupplier stop2,
       double test) {
@@ -60,10 +61,10 @@ public class AmpmechCommands extends Command {
     if (step == 2) {
       if (Timer.getFPGATimestamp() - timer > 0.5 // number of seconds the rollers spin
       ) {
-        roller.rollerFunction(0, 0, 0);
+        indexer.rollerFunction(0, 0, 0);
         step = 3;
       } else {
-        roller.rollerFunction(-0.75, 0, 0);
+        indexer.rollerFunction(-0.75, 0, 0);
       }
     }
 

@@ -1,7 +1,7 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ampmech.roller;
+import frc.robot.subsystems.indexer.indexer;
 import frc.robot.subsystems.intake.Intake2;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -16,7 +16,7 @@ public class IntakeCommandauto extends Command {
   private final BooleanSupplier limit;
 
   public IntakeCommandauto(
-      roller subsystem2,
+      indexer subsystem2,
       Intake2 subsystem,
       double bumper,
       DoubleSupplier rightTrigger,
@@ -40,10 +40,10 @@ public class IntakeCommandauto extends Command {
   public void execute() {
     if (limit.getAsBoolean() == true) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
-      roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
+      indexer.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     } else {
       Intake2.intakeFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
-      roller.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
+      indexer.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     }
   }
 

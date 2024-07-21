@@ -59,6 +59,9 @@ public class DriveCommands {
                   .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
                   .getTranslation();
 
+          // Consider how to apply a filter (e.g., SlewRateLimiter() or similar) to
+          // keep from tearing up the carpet and/or quickly draining the battery!
+
           // Convert to field relative speeds & send command
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()

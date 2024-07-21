@@ -1,4 +1,4 @@
-package frc.robot.subsystems.ampmech;
+package frc.robot.subsystems.elevator;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;

@@ -2,15 +2,15 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ampmech.roller;
+import frc.robot.subsystems.indexer.indexer;
 
 public class ShooterCommands extends Command {
 
-  private roller m_subsystem2;
+  private indexer m_subsystem2;
   private static double timer;
   private static double speed;
 
-  public ShooterCommands(roller ampSubsystem, double speed) {
+  public ShooterCommands(indexer ampSubsystem) {
     this.m_subsystem2 = ampSubsystem;
     this.speed = speed;
   }
@@ -23,14 +23,14 @@ public class ShooterCommands extends Command {
   @Override
   public void execute() {
     if (Timer.getFPGATimestamp() - timer > 1) {
-      roller.rollerFunction(0, 0, 0);
+      indexer.rollerFunction(0, 0, 0);
     } else {
-      roller.rollerFunction(speed, 0, 0);
+      indexer.rollerFunction(.5, 0, 0);
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-    roller.rollerFunction(0, 0, 0);
+    indexer.rollerFunction(0, 0, 0);
   }
 }
