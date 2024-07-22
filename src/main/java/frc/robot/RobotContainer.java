@@ -136,7 +136,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("shoot", new ShooterCommands(roller, 1.0).withTimeout(1));
 
-    NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter).withTimeout(0.5));
+    NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter).withTimeout(1));
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
