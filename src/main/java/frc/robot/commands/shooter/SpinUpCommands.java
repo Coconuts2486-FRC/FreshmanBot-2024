@@ -22,6 +22,6 @@ public class SpinUpCommands extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    this.m_subsystem.runVolts(0);
+    this.m_subsystem.runVelocity(0);
   }
 }

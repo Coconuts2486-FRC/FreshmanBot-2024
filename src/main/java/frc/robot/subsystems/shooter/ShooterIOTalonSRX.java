@@ -32,7 +32,9 @@ public class ShooterIOTalonSRX implements ShooterIO {
 
     // Set up the configurations for the upper & lower shooter motors
     var config = new TalonSRXConfiguration();
-    config.continuousCurrentLimit = 30; // Current limit!
+    config.peakCurrentLimit = 30;
+    config.peakCurrentDuration = 60; // Milliseconds
+    config.continuousCurrentLimit = 20; // Current limit!
     lowerShot.configAllSettings(config);
     upperShot.configAllSettings(config);
     lowerShot.setNeutralMode(NeutralMode.Coast);
@@ -59,9 +61,9 @@ public class ShooterIOTalonSRX implements ShooterIO {
     // BaseStatusSignal.refreshAll(
     // lowerPosition, lowerVelocity, lowerAppliedVolts, lowerCurrent, upperCurrent);
     inputs.positionRad =
-        Units.rotationsToRadians(lowerShot.getSelectedSensorPosition()) / GEAR_RATIO;
+        Units.rotationsToRadians(lowerShot.getSelectedSensorPosition() / 2048.) / GEAR_RATIO;
     inputs.velocityRadPerSec =
-        Units.rotationsToRadians(lowerShot.getSelectedSensorVelocity()) / GEAR_RATIO;
+        Units.rotationsToRadians(phx52rps(lowerShot.getSelectedSensorVelocity())) / GEAR_RATIO;
     inputs.appliedVolts = lowerShot.getMotorOutputVoltage();
     inputs.currentAmps = new double[] {lowerShot.getSupplyCurrent(), upperShot.getSupplyCurrent()};
   }
@@ -87,11 +89,9 @@ public class ShooterIOTalonSRX implements ShooterIO {
 
     // Convert the input into something Phoenix5 understands
     double vRotPerSec = Units.radiansToRotations(velocityRadPerSec);
-    // 2048 ticks per rotation, 10 "time units" (100 ms) per second
-    double vPhx5 = vRotPerSec * 2048. / 10.;
     // Set the velocity
     // lowerShot.config_kF(0, 0.05, 50);
-    lowerShot.set(ControlMode.Velocity, vPhx5);
+    lowerShot.set(ControlMode.Velocity, rps2phx5(vRotPerSec));
   }
 
   /** Stop the motor */
@@ -112,5 +112,29 @@ public class ShooterIOTalonSRX implements ShooterIO {
     lowerShot.config_kP(0, kP, 50);
     lowerShot.config_kI(0, kI, 50);
     lowerShot.config_kD(0, kD, 50);
+  }
+
+  /**
+   * Convert revolutions per second to Phoenix5 native velocity
+   *
+   * <p>Phoenix5 uses motor ticks per 100ms. There are 2048 ticks in a full revolution, and 10
+   * groups of 100ms in a second.
+   *
+   * @param rps Motor speed in revolutions (rotations) per second
+   */
+  private double rps2phx5(double rps) {
+    return rps * 2048. / 10.;
+  }
+
+  /**
+   * Convert Phoenix5 native velocity to revolutions per second
+   *
+   * <p>Phoenix5 uses motor ticks per 100ms. There are 2048 ticks in a full revolution, and 10
+   * groups of 100ms in a second.
+   *
+   * @param phx5Vel Motor speed in Phoenix5 native units
+   */
+  private double phx52rps(double phx5Vel) {
+    return phx5Vel / 2048. * 10.;
   }
 }
