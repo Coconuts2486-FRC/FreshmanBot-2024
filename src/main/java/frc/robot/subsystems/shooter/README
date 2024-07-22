@@ -1,0 +1,12 @@
+The Shooter subsystem is a velocity-controlled mechanism designed to shoot
+a gamepiece into a goal.  This specific module contains a modified version of
+the AdvantageKit "Flywheel" subsystem, with the hardware-specific module being
+modified from TalonFX (Phoenix6 library) to the TalonSRX (Phoenix5 library).
+
+If this shooter module is to be used on other robots with different hardware,
+the TalonFX or SparkMax modules from the AdvantakeKit "Flywheel" should be
+copied here and appropriately modified.
+
+NOTE: The code in this module is written for velocity-controlled mechanisms,
+and should not be used directly for position-controlled mechanisms (elevators,
+arms, etc.).

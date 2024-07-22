@@ -17,7 +17,7 @@ public class SpinUpCommands extends Command {
   @Override
   public void execute() {
     // The 775 motors on the shooter have a max speed of 6000 RPM at 12V
-    this.m_subsystem.runVelocity(3000);
+    this.m_subsystem.runVelocity(4500);
   }
 
   @Override

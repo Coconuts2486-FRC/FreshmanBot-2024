@@ -10,7 +10,7 @@ public class ShooterCommands extends Command {
   private static double timer;
   private static double speed;
 
-  public ShooterCommands(indexer ampSubsystem) {
+  public ShooterCommands(indexer ampSubsystem, double speed) {
     this.m_subsystem2 = ampSubsystem;
     this.speed = speed;
   }
@@ -25,7 +25,7 @@ public class ShooterCommands extends Command {
     if (Timer.getFPGATimestamp() - timer > 1) {
       indexer.rollerFunction(0, 0, 0);
     } else {
-      indexer.rollerFunction(.5, 0, 0);
+      indexer.rollerFunction(speed, 0, 0);
     }
   }
 
