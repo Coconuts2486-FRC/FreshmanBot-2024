@@ -13,89 +13,105 @@
 
 package frc.robot.subsystems.shooter;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 
 public class ShooterIOTalonSRX implements ShooterIO {
 
   // The shooter 775 motors each have a 3:1 gearbox on the output shaft
   private static final double GEAR_RATIO = 3.0;
+  private static final double COMP_VOLTAGE = 11.0;
 
-  private final TalonSRX lower = new TalonSRX(25);
-  private final TalonSRX upper = new TalonSRX(26);
-
-  private final double lowerPosition = lower.getSelectedSensorPosition();
-  private final StatusSignal<Double> lowerVelocity = lower.getVelocity();
-  private final StatusSignal<Double> lowerAppliedVolts = lower.getMotorVoltage();
-  private final StatusSignal<Double> lowerCurrent = lower.getSupplyCurrent();
-  private final StatusSignal<Double> upperCurrent = upper.getSupplyCurrent();
+  private final TalonSRX lowerShot = new TalonSRX(25);
+  private final TalonSRX upperShot = new TalonSRX(26);
 
   public ShooterIOTalonSRX() {
-    var config = new TalonSRXConfiguration();
-    config.CurrentLimits.SupplyCurrentLimit = 30.0;
-    config.CurrentLimits.SupplyCurrentLimitEnable = true;
-    config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    lower.getConfigurator().apply(config);
-    upper.getConfigurator().apply(config);
-    upper.setControl(new Follower(lower.getDeviceID(), false));
 
-    BaseStatusSignal.setUpdateFrequencyForAll(
-        50.0, lowerPosition, lowerVelocity, lowerAppliedVolts, lowerCurrent, upperCurrent);
-    lower.optimizeBusUtilization();
-    upper.optimizeBusUtilization();
+    // Set up the configurations for the upper & lower shooter motors
+    var config = new TalonSRXConfiguration();
+    config.continuousCurrentLimit = 30; // Current limit!
+    lowerShot.configAllSettings(config);
+    upperShot.configAllSettings(config);
+    lowerShot.setNeutralMode(NeutralMode.Coast);
+    upperShot.setNeutralMode(NeutralMode.Coast);
+
+    // More motor configurations -- voltage ramps, compensation
+    lowerShot.configOpenloopRamp(
+        0.5); // 0.5 seconds from neutral to full output (during open-loop control)
+    lowerShot.configClosedloopRamp(0); // 0 disables ramping (during closed-loop control)
+    lowerShot.configVoltageCompSaturation(
+        COMP_VOLTAGE); // "full output" scales to 11 Volts for all control modes
+    lowerShot.enableVoltageCompensation(true); // turn on/off feature
+    upperShot.follow(lowerShot); // Lower to simply follow upper
+
+    // BaseStatusSignal.setUpdateFrequencyForAll(
+    // 50.0, lowerPosition, lowerVelocity, lowerAppliedVolts, lowerCurrent,
+    // upperCurrent);
+    // lower.optimizeBusUtilization();
+    // upper.optimizeBusUtilization();
   }
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
-    BaseStatusSignal.refreshAll(
-        lowerPosition, lowerVelocity, lowerAppliedVolts, lowerCurrent, upperCurrent);
-    inputs.positionRad = Units.rotationsToRadians(lowerPosition.getValueAsDouble()) / GEAR_RATIO;
+    // BaseStatusSignal.refreshAll(
+    // lowerPosition, lowerVelocity, lowerAppliedVolts, lowerCurrent, upperCurrent);
+    inputs.positionRad =
+        Units.rotationsToRadians(lowerShot.getSelectedSensorPosition()) / GEAR_RATIO;
     inputs.velocityRadPerSec =
-        Units.rotationsToRadians(lowerVelocity.getValueAsDouble()) / GEAR_RATIO;
-    inputs.appliedVolts = lowerAppliedVolts.getValueAsDouble();
-    inputs.currentAmps =
-        new double[] {lowerCurrent.getValueAsDouble(), upperCurrent.getValueAsDouble()};
+        Units.rotationsToRadians(lowerShot.getSelectedSensorVelocity()) / GEAR_RATIO;
+    inputs.appliedVolts = lowerShot.getMotorOutputVoltage();
+    inputs.currentAmps = new double[] {lowerShot.getSupplyCurrent(), upperShot.getSupplyCurrent()};
   }
 
+  /**
+   * Run the shooter in open-loop voltage mode
+   *
+   * @param volts The open-loop voltage at which to run the motor
+   */
   @Override
   public void setVoltage(double volts) {
-    lower.setControl(new VoltageOut(volts));
+    lowerShot.set(ControlMode.PercentOutput, Math.max(volts / COMP_VOLTAGE, 1.0));
   }
 
+  /**
+   * Run the shooter in closed-loop velocity mode
+   *
+   * @param velocityRadPerSec The requested closed-loop velocity of the shooter motor in radians/sec
+   * @param ffVolts The modeled feed-forward voltage predicted to achieve this velocity
+   */
   @Override
   public void setVelocity(double velocityRadPerSec, double ffVolts) {
-    lower.setControl(
-        new VelocityVoltage(
-            Units.radiansToRotations(velocityRadPerSec),
-            0.0,
-            true,
-            ffVolts,
-            0,
-            false,
-            false,
-            false));
+
+    // Convert the input into something Phoenix5 understands
+    double vRotPerSec = Units.radiansToRotations(velocityRadPerSec);
+    // 2048 ticks per rotation, 10 "time units" (100 ms) per second
+    double vPhx5 = vRotPerSec * 2048. / 10.;
+    // Set the velocity
+    // lowerShot.config_kF(0, 0.05, 50);
+    lowerShot.set(ControlMode.Velocity, vPhx5);
   }
 
+  /** Stop the motor */
   @Override
   public void stop() {
-    lower.stopMotor();
+    lowerShot.set(ControlMode.PercentOutput, 0);
   }
 
+  /**
+   * Configure the shooter's PID
+   *
+   * @param kP Proportional gain
+   * @param kI Integral gain
+   * @param kD Derivative gain
+   */
   @Override
   public void configurePID(double kP, double kI, double kD) {
-    var config = new Slot0Configs();
-    config.kP = kP;
-    config.kI = kI;
-    config.kD = kD;
-    lower.getConfigurator().apply(config);
+    lowerShot.config_kP(0, kP, 50);
+    lowerShot.config_kI(0, kI, 50);
+    lowerShot.config_kD(0, kD, 50);
   }
 }
 
@@ -107,17 +123,17 @@ public class ShooterIOTalonSRX implements ShooterIO {
 
 // public class shooter extends SubsystemBase {
 
-//   private static TalonSRX shooterMotor1;
-//   private static TalonSRX shooterMotor2;
+// private static TalonSRX shooterMotor1;
+// private static TalonSRX shooterMotor2;
 
-//   public shooter() {
+// public shooter() {
 
-//     shooterMotor1 = new TalonSRX(25);
-//     shooterMotor2 = new TalonSRX(26);
-//   }
+// shooterMotor1 = new TalonSRX(25);
+// shooterMotor2 = new TalonSRX(26);
+// }
 
-//   public static void shooterFunction(double speed) {
-//     shooterMotor1.set(ControlMode.PercentOutput, speed);
-//     shooterMotor2.set(ControlMode.PercentOutput, speed);
-//   }
+// public static void shooterFunction(double speed) {
+// shooterMotor1.set(ControlMode.PercentOutput, speed);
+// shooterMotor2.set(ControlMode.PercentOutput, speed);
+// }
 // }

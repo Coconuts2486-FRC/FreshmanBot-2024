@@ -1,13 +1,13 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.shooter.shooter;
+import frc.robot.subsystems.shooter.Shooter;
 
 public class SpinUpCommands extends Command {
 
-  private shooter m_subsystem;
+  private Shooter m_subsystem;
 
-  public SpinUpCommands(shooter shooterSubsystem) {
+  public SpinUpCommands(Shooter shooterSubsystem) {
     this.m_subsystem = shooterSubsystem;
   }
 
@@ -16,11 +16,12 @@ public class SpinUpCommands extends Command {
 
   @Override
   public void execute() {
-    shooter.shooterFunction(0.75);
+    // The 775 motors on the shooter have a max speed of 6000 RPM at 12V
+    this.m_subsystem.runVelocity(3000);
   }
 
   @Override
   public void end(boolean interrupted) {
-    shooter.shooterFunction(0);
+    this.m_subsystem.runVolts(0);
   }
 }
