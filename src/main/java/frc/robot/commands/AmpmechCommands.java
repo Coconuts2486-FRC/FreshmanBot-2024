@@ -15,16 +15,16 @@ public class AmpmechCommands extends Command {
   private final roller m_subsystem2;
   private int step = 1;
   private static double timer;
-  private double test = 0;
+  private int part = 0;
 
   public AmpmechCommands(
       elevator m_subsystem,
       roller m_subsystem2,
       BooleanSupplier stop,
       BooleanSupplier stop2,
-      double test) {
+      int part) {
     this.stop = stop;
-    this.test = test;
+    this.part = part;
     this.m_subsystem = m_subsystem;
     this.m_subsystem2 = m_subsystem2;
     this.stop2 = stop2;
@@ -37,8 +37,6 @@ public class AmpmechCommands extends Command {
 
   @Override
   public void execute() {
-
-    elevator.elevatorFunction(test);
 
     // step one = elevator goes up until it hits top limit switch
     // step two = ampmech rollers spin outwards for a set mout of time to shoot note
@@ -57,6 +55,7 @@ public class AmpmechCommands extends Command {
         timer = Timer.getFPGATimestamp();
       }
     }
+
     if (step == 2) {
       if (Timer.getFPGATimestamp() - timer > 0.5 // number of seconds the rollers spin
       ) {
@@ -73,6 +72,15 @@ public class AmpmechCommands extends Command {
       } else {
         elevator.elevatorFunction(0);
       }
+    }
+  }
+
+  @Override
+  public boolean isFinished() {
+    if (stop2.getAsBoolean() == false && step == 3) {
+      return true;
+    } else {
+      return false;
     }
   }
 

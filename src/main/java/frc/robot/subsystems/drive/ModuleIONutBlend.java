@@ -90,7 +90,7 @@ public class ModuleIONutBlend implements ModuleIO {
         driveTalon = new TalonFX(6, "Canivore");
         turnSparkMax = new CANSparkMax(7, MotorType.kBrushless);
         cancoder = new CANcoder(8, "Canivore");
-        absoluteEncoderOffset = new Rotation2d(0.57648516 + Math.PI);
+        absoluteEncoderOffset = new Rotation2d(0.5783106 + Math.PI);
         break;
       case 3: // BR
         driveTalon = new TalonFX(9, "Canivore");

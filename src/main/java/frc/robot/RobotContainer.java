@@ -132,11 +132,15 @@ public class RobotContainer {
 
     NamedCommands.registerCommand(
         "runIntake",
-        new IntakeCommandauto(roller, intake, 0.50, () -> 0, () -> 0, () -> intakeStop.get()));
+        new IntakeCommandauto(roller, intake, 0.75, () -> 0, () -> 0, () -> intakeStop.get()));
 
-    NamedCommands.registerCommand("shoot", new ShooterCommands(roller, 1.0).withTimeout(1));
+    NamedCommands.registerCommand("shoot", new ShooterCommands(roller, 1.0).withTimeout(0.5));
 
-    NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter).withTimeout(1));
+    NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter).withTimeout(0.5));
+    NamedCommands.registerCommand("spinUp0", new SpinUpCommands(shooter).withTimeout(0.25));
+    NamedCommands.registerCommand("spinUp1", new SpinUpCommands(shooter).withTimeout(1.12));
+    NamedCommands.registerCommand("spinUp2", new SpinUpCommands(shooter).withTimeout(1.78));
+    NamedCommands.registerCommand("spinUp3", new SpinUpCommands(shooter).withTimeout(2.64));
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -183,11 +187,9 @@ public class RobotContainer {
     codriver.leftBumper().toggleOnTrue(new ShooterCommands(roller, 0.75));
 
     // ampmech Command
-    driver
+    codriver
         .a()
-        .toggleOnTrue(
-            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0)
-                .withTimeout(5));
+        .toggleOnTrue(new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0));
 
     // Intake Command
 
@@ -202,7 +204,7 @@ public class RobotContainer {
                 () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get()))
         .whileTrue(
-            new IntakeCommand(roller, intake, 0.33, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(roller, intake, 0.50, () -> 0, () -> 0, () -> intakeStop.get()));
 
     // Climb Command
     // climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
@@ -223,7 +225,7 @@ public class RobotContainer {
                .ignoringDisable(true));  */
 
     // Gryo reset button
-    driver.y().onTrue(Commands.runOnce(() -> drive.zero(), drive));
+    driver.y().toggleOnTrue(Commands.runOnce(() -> drive.zero(), drive));
     // driver
     //     .a()
     //     .whileTrue(

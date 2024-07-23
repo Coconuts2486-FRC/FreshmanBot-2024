@@ -44,7 +44,7 @@ public class GyroIOPigeon2 implements GyroIO {
 
   @Override
   public void zero() {
-    pigeon.setYaw(0);
+    pigeon.setYaw(180);
   }
 
   /**
