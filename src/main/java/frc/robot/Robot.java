@@ -13,6 +13,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,11 +27,17 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends LoggedRobot {
@@ -36,7 +47,25 @@ public class Robot extends LoggedRobot {
   double prevXAccel = 0.0;
   double prevYAccel = 0.0;
 
+  // Add data logging from various sources
   BuiltInAccelerometer accelerometer = new BuiltInAccelerometer();
+  PhotonCamera camera1 = new PhotonCamera("Photon_BW1");
+  PhotonCamera camera2 = new PhotonCamera("Photon_BW2");
+
+  // PhotonVision Logging Information
+  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+  // Cam mounted facing "forward", 0.05m forward of center, 0.61m up from center,
+  // 4mm left of center
+  Transform3d robotToCam1 = new Transform3d(
+      new Translation3d(0.05, -0.04, 0.61), new Rotation3d(0, -20, 32.5));
+  Transform3d robotToCam2 = new Transform3d(
+      new Translation3d(0.05, 0.04, 0.61), new Rotation3d(0, -20, -32.5));
+  // Construct `PhotonPoseEstimator`s
+  PhotonPoseEstimator photonPoseEstimator1 = new PhotonPoseEstimator(
+      aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera1, robotToCam1);
+  PhotonPoseEstimator photonPoseEstimator2 = new PhotonPoseEstimator(
+      aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera2, robotToCam2);
 
   // Intailazation Code
   @Override
@@ -102,33 +131,46 @@ public class Robot extends LoggedRobot {
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    // Gets the current accelerations in the X and Y directions
-    double xAccel = accelerometer.getX();
-    double yAccel = accelerometer.getY();
+    // Gets the current accelerations in the X and Y directions (RoboRIO is mounted
+    // 90º CCW from the canonical coordinate system)
+    double xAccel = -accelerometer.getY();
+    double yAccel = accelerometer.getX();
 
     // Calculates the jerk in the X and Y directions
     // Divides by .02 because default loop timing is 20ms
     double xJerk = (xAccel - prevXAccel) / 0.02;
     double yJerk = (yAccel - prevYAccel) / 0.02;
 
-    Logger.recordOutput("xaccel", xAccel);
-    Logger.recordOutput("yaccel", yAccel);
-    Logger.recordOutput("xjerk", xJerk);
-    Logger.recordOutput("yjerk", yJerk);
+    Logger.recordOutput("Accels/xaccel", xAccel);
+    Logger.recordOutput("Accels/yaccel", yAccel);
+    Logger.recordOutput("Accels/xjerk", xJerk);
+    Logger.recordOutput("Accels/yjerk", yJerk);
 
     prevXAccel = xAccel;
     prevYAccel = yAccel;
+
+    // Query & log the latest result from PhotonVision
+    var result1 = camera1.getLatestResult();
+    var result2 = camera2.getLatestResult();
+    Logger.recordOutput("Photon_BW1", result1);
+    Logger.recordOutput("Photon_BW2", result2);
+
   }
 
   // Calls when disabled once
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /**
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
+   */
   @Override
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
@@ -141,7 +183,8 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -157,7 +200,8 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
@@ -168,13 +212,16 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }
