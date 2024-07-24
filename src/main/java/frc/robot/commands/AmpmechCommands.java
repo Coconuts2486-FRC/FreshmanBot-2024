@@ -33,6 +33,7 @@ public class AmpmechCommands extends Command {
   @Override
   public void initialize() {
     step = 1;
+    timer = Timer.getFPGATimestamp();
   }
 
   @Override
@@ -45,32 +46,31 @@ public class AmpmechCommands extends Command {
 
     // limit switches are reversed so when its not pressed it gives off true not false
 
-    if (step == 1) {
+    if (part == 1) {
       if (stop.getAsBoolean() == true) {
         elevator.elevatorFunction(-0.50);
       } else {
         elevator.elevatorFunction(0);
-
-        step = 2;
-        timer = Timer.getFPGATimestamp();
       }
     }
 
-    if (step == 2) {
-      if (Timer.getFPGATimestamp() - timer > 0.5 // number of seconds the rollers spin
-      ) {
-        roller.rollerFunction(0, 0, 0);
-        step = 3;
-      } else {
-        roller.rollerFunction(-0.75, 0, 0);
+    if (part == 2) {
+      if (step == 1) {
+        if (Timer.getFPGATimestamp() - timer > 0.5 // number of seconds the rollers spin
+        ) {
+          roller.rollerFunction(0, 0, 0);
+          step = 2;
+        } else {
+          roller.rollerFunction(-0.75, 0, 0);
+        }
       }
-    }
 
-    if (step == 3) {
-      if (stop2.getAsBoolean() == true) {
-        elevator.elevatorFunction(0.33);
-      } else {
-        elevator.elevatorFunction(0);
+      if (step == 2) {
+        if (stop2.getAsBoolean() == true) {
+          elevator.elevatorFunction(0.33);
+        } else {
+          elevator.elevatorFunction(0);
+        }
       }
     }
   }

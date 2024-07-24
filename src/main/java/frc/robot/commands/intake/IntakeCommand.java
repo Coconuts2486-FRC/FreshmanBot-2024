@@ -14,6 +14,7 @@ public class IntakeCommand extends Command {
   private final double bumper;
 
   private final BooleanSupplier limit;
+  private final BooleanSupplier eleavtor;
 
   public IntakeCommand(
       roller subsystem2,
@@ -21,12 +22,14 @@ public class IntakeCommand extends Command {
       double bumper,
       DoubleSupplier rightTrigger,
       DoubleSupplier leftTrigger,
-      BooleanSupplier limit) {
+      BooleanSupplier limit,
+      BooleanSupplier eleavtor) {
     m_subsystem = subsystem;
     this.bumper = bumper;
     this.rightTrigger = rightTrigger;
     this.leftTrigger = leftTrigger;
     this.limit = limit;
+    this.eleavtor = eleavtor;
   }
 
   @Override
@@ -38,10 +41,10 @@ public class IntakeCommand extends Command {
    */
   @Override
   public void execute() {
-    if (limit.getAsBoolean() == true) {
+    if (limit.getAsBoolean() == true && eleavtor.getAsBoolean() == true) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
-    } else {
+    } else if (eleavtor.getAsBoolean() == true) {
       Intake2.intakeFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     }

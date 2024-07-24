@@ -9,7 +9,7 @@
 
 // public class climb extends SubsystemBase {
 
-  // private final CANSparkMax climbNeo = new CANSparkMax(107, MotorType.kBrushless);
+  // private final CANSparkMax climbNeo = new CANSparkMax(30, MotorType.kBrushless);
   // // Device ID is needs a change
   // public Climb() {
   //   climbNeo.setIdleMode(IdleMode.kBrake);

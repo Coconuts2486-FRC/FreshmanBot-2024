@@ -48,6 +48,7 @@ import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
 import frc.robot.subsystems.intake.Intake2;
 import frc.robot.subsystems.shooter.shooter;
+import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -75,6 +76,9 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardNumber flywheelSpeedInput =
       new LoggedDashboardNumber("Flywheel Speed", 1500.0);
+
+  private final LoggedDashboardBoolean lightStop =
+      new LoggedDashboardBoolean("Lightstop Triggered", intakeStop.get());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -192,7 +196,11 @@ public class RobotContainer {
     // ampmech Command
     codriver
         .a()
-        .toggleOnTrue(new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 0));
+        .toggleOnTrue(new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 1));
+
+    codriver
+        .b()
+        .toggleOnTrue(new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 2));
 
     // Intake Command
 
@@ -205,9 +213,17 @@ public class RobotContainer {
                 0,
                 () -> driver.getRightTriggerAxis(),
                 () -> driver.getLeftTriggerAxis(),
-                () -> intakeStop.get()))
+                () -> intakeStop.get(),
+                () -> elevatorStop.get()))
         .whileTrue(
-            new IntakeCommand(roller, intake, 0.50, () -> 0, () -> 0, () -> intakeStop.get()));
+            new IntakeCommand(
+                roller,
+                intake,
+                0.50,
+                () -> 0,
+                () -> 0,
+                () -> intakeStop.get(),
+                () -> elevatorStop.get()));
 
     // Climb Command
     // climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
