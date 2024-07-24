@@ -72,8 +72,8 @@ public class Drive extends SubsystemBase {
         () -> kinematics.toChassisSpeeds(getModuleStates()),
         this::runVelocity,
         new HolonomicPathFollowerConfig(
-            new PIDConstants(0.001, 0.0, 0.05),
-            new PIDConstants(0.01, 0.0, 0.),
+            new PIDConstants(0.0015, 0.0, 0.05),
+            new PIDConstants(0.01, 0.0, 0.0),
             MAX_LINEAR_SPEED,
             DRIVE_BASE_RADIUS,
             new ReplanningConfig()),

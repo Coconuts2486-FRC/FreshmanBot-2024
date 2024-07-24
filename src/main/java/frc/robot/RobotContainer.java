@@ -142,6 +142,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("spinUp2", new SpinUpCommands(shooter).withTimeout(1.78));
     NamedCommands.registerCommand("spinUp3", new SpinUpCommands(shooter).withTimeout(2.64));
 
+    NamedCommands.registerCommand("spinUpAmp1", new SpinUpCommands(shooter).withTimeout(3.18));
+    NamedCommands.registerCommand("spinUpAmp2", new SpinUpCommands(shooter).withTimeout(3.07));
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
