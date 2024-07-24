@@ -72,7 +72,8 @@ public class RobotContainer {
   // Controller Setups
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController codriver = new CommandXboxController(1);
-
+  private final Trigger climbTriggerUp = new Trigger(() -> codriver.getRightY() > .1);
+  private final Trigger climbTriggerDown = new Trigger(() -> codriver.getRightY() < -.1);
   // Dashboard Inputs
   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardNumber flywheelSpeedInput =
@@ -226,7 +227,8 @@ public class RobotContainer {
                 () -> elevatorStop.get()));
 
     // Climb Command
-    climb.setDefaultCommand(new ClimbCommand(climb, () -> codriver.getRightY()));
+    climbTriggerUp.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY()));
+    climbTriggerDown.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY()));
 
     // Drive Command
     drive.setDefaultCommand(
