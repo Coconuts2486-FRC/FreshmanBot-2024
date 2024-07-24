@@ -38,6 +38,7 @@ public class IntakeCommandauto extends Command {
    */
   @Override
   public void execute() {
+    // LoggedDashboardBoolean hi = new LoggedDashboardBoolean("lit", limit.getAsBoolean());
     if (limit.getAsBoolean() == true) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());

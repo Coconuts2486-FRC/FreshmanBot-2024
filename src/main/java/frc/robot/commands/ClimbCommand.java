@@ -23,5 +23,7 @@ public class ClimbCommand extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    climbRun.climbSet(0);
+  }
 }
