@@ -52,6 +52,8 @@ public class AmpmechCommands extends Command {
       } else {
         elevator.elevatorFunction(0);
       }
+    } else {
+      elevator.elevatorFunction(0);
     }
 
     if (part == 2) {
@@ -77,7 +79,7 @@ public class AmpmechCommands extends Command {
 
   @Override
   public boolean isFinished() {
-    if (stop2.getAsBoolean() == false && step == 3) {
+    if (stop2.getAsBoolean() == false && step == 2) {
       return true;
     } else {
       return false;

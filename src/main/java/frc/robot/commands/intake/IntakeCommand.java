@@ -48,6 +48,8 @@ public class IntakeCommand extends Command {
       Intake2.intakeFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     }
+
+    Intake2.lightstop(limit.getAsBoolean());
   }
 
   @Override

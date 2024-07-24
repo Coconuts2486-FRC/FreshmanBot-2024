@@ -1,21 +1,19 @@
-// package frc.robot.subsystems.climb;
+package frc.robot.subsystems.climb;
 
-// import com.revrobotics.CANSparkBase.IdleMode;
-// import com.revrobotics.CANSparkLowLevel.MotorType;
-// import com.revrobotics.CANSparkMax;
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// // Climb Class
+public class climb extends SubsystemBase {
 
-// public class climb extends SubsystemBase {
+  private final CANSparkMax climbNeo = new CANSparkMax(23, MotorType.kBrushless);
 
-  // private final CANSparkMax climbNeo = new CANSparkMax(30, MotorType.kBrushless);
-  // // Device ID is needs a change
-  // public Climb() {
-  //   climbNeo.setIdleMode(IdleMode.kBrake);
-  // }
+  public climb() {
+    // climbNeo = new CANSparkMax(35, MotorType.kBrushless);
+    // climbNeo.setIdleMode(IdleMode.kBrake);
+  }
 
-//   public void climbSet(double speed) {
-//     climbNeo.set(speed);
-//   }
-// }
+  public void climbSet(double speed) {
+    climbNeo.set(speed);
+  }
+}

@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AmpmechCommands;
-// import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.IntakeCommandauto;
@@ -35,7 +35,7 @@ import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
-// import frc.robot.subsystems.climb.climb;
+import frc.robot.subsystems.climb.climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -48,14 +48,14 @@ import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
 import frc.robot.subsystems.intake.Intake2;
 import frc.robot.subsystems.shooter.shooter;
-import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
+import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  //   private final climb climb = new climb();
+  private final climb climb = new climb();
   private final Flywheel flywheel;
   private final elevator elevator = new elevator();
   private final roller roller = new roller();
@@ -67,6 +67,7 @@ public class RobotContainer {
   private Trigger intakeTrigger = new Trigger(intakeStop::get);
   private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
   private Trigger elevatorTrigger2 = new Trigger(elevatorStop2::get);
+  private BooleanSupplier intakeTrue = intakeStop::get;
 
   // Controller Setups
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -76,9 +77,6 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardNumber flywheelSpeedInput =
       new LoggedDashboardNumber("Flywheel Speed", 1500.0);
-
-  private final LoggedDashboardBoolean lightStop =
-      new LoggedDashboardBoolean("Lightstop Triggered", intakeStop.get());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -200,7 +198,9 @@ public class RobotContainer {
 
     codriver
         .b()
-        .toggleOnTrue(new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 2));
+        .toggleOnTrue(
+            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 2)
+                .withTimeout(3));
 
     // Intake Command
 
@@ -226,7 +226,7 @@ public class RobotContainer {
                 () -> elevatorStop.get()));
 
     // Climb Command
-    // climb.setDefaultCommand(new ClimbCommand(climb,() -> codriver.getRightY()));
+    climb.setDefaultCommand(new ClimbCommand(climb, () -> codriver.getRightY()));
 
     // Drive Command
     drive.setDefaultCommand(
