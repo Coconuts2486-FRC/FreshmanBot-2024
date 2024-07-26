@@ -44,7 +44,7 @@ public class IntakeCommand extends Command {
     if (limit.getAsBoolean() == true && eleavtor.getAsBoolean() == false) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
-    } else if (eleavtor.getAsBoolean() == false) {
+    } else {
       Intake2.intakeFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     }
