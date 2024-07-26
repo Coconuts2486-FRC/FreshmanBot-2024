@@ -42,10 +42,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIONutBlend;
 import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.flywheel.Flywheel;
-import frc.robot.subsystems.flywheel.FlywheelIO;
-import frc.robot.subsystems.flywheel.FlywheelIOSim;
-import frc.robot.subsystems.flywheel.FlywheelIOTalonFX;
 import frc.robot.subsystems.intake.Intake2;
 import frc.robot.subsystems.shooter.shooter;
 import java.util.function.BooleanSupplier;
@@ -56,7 +52,6 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final climb climb = new climb();
-  private final Flywheel flywheel;
   private final elevator elevator = new elevator();
   private final roller roller = new roller();
   private final Intake2 intake = new Intake2();
@@ -90,7 +85,6 @@ public class RobotContainer {
          * And whats a flywheel?
          * Otherwise I dont think this code is being used
          */
-        flywheel = new Flywheel(new FlywheelIOTalonFX());
         drive =
             new Drive(
                 new GyroIOPigeon2(),
@@ -110,7 +104,6 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
-        flywheel = new Flywheel(new FlywheelIOSim());
         break;
 
       default:
@@ -122,7 +115,6 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        flywheel = new Flywheel(new FlywheelIO() {});
         break;
     }
 
@@ -162,16 +154,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Flywheel SysId (Quasistatic Forward)",
-        flywheel.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Flywheel SysId (Quasistatic Reverse)",
-        flywheel.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Flywheel SysId (Dynamic Forward)", flywheel.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Flywheel SysId (Dynamic Reverse)", flywheel.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
     configureButtonBindings();
