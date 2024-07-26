@@ -41,15 +41,13 @@ public class IntakeCommand extends Command {
    */
   @Override
   public void execute() {
-    if (limit.getAsBoolean() == true && eleavtor.getAsBoolean() == true) {
+    if (limit.getAsBoolean() == true && eleavtor.getAsBoolean() == false) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
-    } else if (eleavtor.getAsBoolean() == true) {
+    } else if (eleavtor.getAsBoolean() == false) {
       Intake2.intakeFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     }
-
-    Intake2.lightstop(limit.getAsBoolean());
   }
 
   @Override

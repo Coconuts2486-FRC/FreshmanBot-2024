@@ -140,13 +140,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot", new ShooterCommands(roller, 1.0).withTimeout(0.5));
 
     NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter).withTimeout(0.5));
+    NamedCommands.registerCommand("ampspinup", new SpinUpCommands(shooter).withTimeout(0.75));
     NamedCommands.registerCommand("spinUp0", new SpinUpCommands(shooter).withTimeout(0.25));
     NamedCommands.registerCommand("spinUp1", new SpinUpCommands(shooter).withTimeout(1.12));
     NamedCommands.registerCommand("spinUp2", new SpinUpCommands(shooter).withTimeout(1.78));
     NamedCommands.registerCommand("spinUp3", new SpinUpCommands(shooter).withTimeout(2.64));
 
-    NamedCommands.registerCommand("spinUpAmp1", new SpinUpCommands(shooter).withTimeout(3.18));
-    NamedCommands.registerCommand("spinUpAmp2", new SpinUpCommands(shooter).withTimeout(3.07));
+    NamedCommands.registerCommand("spinUpAmp1", new SpinUpCommands(shooter).withTimeout(3.04));
+    NamedCommands.registerCommand("spinUpAmp2", new SpinUpCommands(shooter).withTimeout(3.2));
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -215,7 +216,7 @@ public class RobotContainer {
                 () -> driver.getRightTriggerAxis(),
                 () -> driver.getLeftTriggerAxis(),
                 () -> intakeStop.get(),
-                () -> elevatorStop.get()))
+                () -> elevatorStop2.get()))
         .whileTrue(
             new IntakeCommand(
                 roller,
@@ -224,7 +225,7 @@ public class RobotContainer {
                 () -> 0,
                 () -> 0,
                 () -> intakeStop.get(),
-                () -> elevatorStop.get()));
+                () -> elevatorStop2.get()));
 
     // Climb Command
     climbTriggerUp.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY()));

@@ -113,6 +113,44 @@
                       "data": {
                         "pathName": "amp 2"
                       }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "spinUpAmp2"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "amp 2 return"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "spinUp0"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "spinUp0"
+                            }
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
