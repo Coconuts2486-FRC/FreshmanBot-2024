@@ -59,7 +59,7 @@ public class AmpmechCommands extends Command {
 
     if (part == 2) {
       if (step == 1) {
-        if (Timer.getFPGATimestamp() - timer > 0.5 // number of seconds the rollers spin
+        if (Timer.getFPGATimestamp() - timer > 0.75 // number of seconds the rollers spin
         ) {
           roller.rollerFunction(0, 0, 0);
           step = 2;
@@ -80,7 +80,7 @@ public class AmpmechCommands extends Command {
 
   @Override
   public boolean isFinished() {
-    if (stop2.getAsBoolean() == false && step == 2 || step == 4 && stop2.getAsBoolean() == false) {
+    if (stop2.getAsBoolean() == false && step == 2 || step == 4) {
       return true;
     } else {
       return false;
