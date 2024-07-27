@@ -27,9 +27,9 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-// import org.photonvision.PhotonCamera;
-// import org.photonvision.PhotonPoseEstimator;
-// import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -46,8 +46,8 @@ public class Robot extends LoggedRobot {
 
   // Add data logging from various sources
   BuiltInAccelerometer accelerometer = new BuiltInAccelerometer();
-  // PhotonCamera camera1 = new PhotonCamera("Photon_BW1");
-  // PhotonCamera camera2 = new PhotonCamera("Photon_BW2");
+  PhotonCamera camera1 = new PhotonCamera("Photon_BW1");
+  PhotonCamera camera2 = new PhotonCamera("Photon_BW2");
 
   // PhotonVision Logging Information
   AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
@@ -59,12 +59,12 @@ public class Robot extends LoggedRobot {
   Transform3d robotToCam2 =
       new Transform3d(new Translation3d(0.05, 0.04, 0.61), new Rotation3d(0, -20, -32.5));
   // Construct `PhotonPoseEstimator`s
-  // PhotonPoseEstimator photonPoseEstimator1 =
-  //     new PhotonPoseEstimator(
-  //         aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera1, robotToCam1);
-  // PhotonPoseEstimator photonPoseEstimator2 =
-  //     new PhotonPoseEstimator(
-  //         aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera2, robotToCam2);
+  PhotonPoseEstimator photonPoseEstimator1 =
+      new PhotonPoseEstimator(
+          aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera1, robotToCam1);
+  PhotonPoseEstimator photonPoseEstimator2 =
+      new PhotonPoseEstimator(
+          aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera2, robotToCam2);
 
   // Intailazation Code
   @Override
@@ -149,10 +149,10 @@ public class Robot extends LoggedRobot {
     prevYAccel = yAccel;
 
     // Query & log the latest result from PhotonVision
-    // var result1 = camera1.getLatestResult();
-    // var result2 = camera2.getLatestResult();
-    // Logger.recordOutput("Photon_BW1", result1);
-    // Logger.recordOutput("Photon_BW2", result2);
+    var result1 = camera1.getLatestResult();
+    var result2 = camera2.getLatestResult();
+    Logger.recordOutput("Photon_BW1", result1);
+    Logger.recordOutput("Photon_BW2", result2);
   }
 
   // Calls when disabled once
