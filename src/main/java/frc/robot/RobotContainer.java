@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AmpmechCommands;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
@@ -127,33 +126,29 @@ public class RobotContainer {
 
     NamedCommands.registerCommand(
         "runIntake",
-        new IntakeCommandauto(roller, intake, 0.75, () -> 0, () -> 0, () -> intakeStop.get()));
+        new IntakeCommandauto(
+            roller,
+            intake,
+            0.75,
+            () -> 0,
+            () -> 0,
+            () -> intakeStop.get(),
+            () -> elevatorStop2.get()));
 
     NamedCommands.registerCommand("shoot", new ShooterCommands(roller, 1.0).withTimeout(0.5));
 
-    NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter).withTimeout(0.5));
+    NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter).withTimeout(0.6));
     NamedCommands.registerCommand("ampspinup", new SpinUpCommands(shooter).withTimeout(0.75));
     NamedCommands.registerCommand("spinUp0", new SpinUpCommands(shooter).withTimeout(0.25));
     NamedCommands.registerCommand("spinUp1", new SpinUpCommands(shooter).withTimeout(1.12));
-    NamedCommands.registerCommand("spinUp2", new SpinUpCommands(shooter).withTimeout(1.78));
+    NamedCommands.registerCommand("spinUp2", new SpinUpCommands(shooter).withTimeout(1.5));
     NamedCommands.registerCommand("spinUp3", new SpinUpCommands(shooter).withTimeout(2.64));
 
     NamedCommands.registerCommand("spinUpAmp1", new SpinUpCommands(shooter).withTimeout(3.04));
     NamedCommands.registerCommand("spinUpAmp2", new SpinUpCommands(shooter).withTimeout(3.2));
+    NamedCommands.registerCommand("spinUpAmpSet", new SpinUpCommands(shooter).withTimeout(0.69));
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    // Set up SysId routines
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -178,12 +173,16 @@ public class RobotContainer {
     // ampmech Command
     codriver
         .a()
-        .toggleOnTrue(new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 1));
-
+        .toggleOnTrue(
+            new AmpmechCommands(
+                    elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 1)
+                .withTimeout(3));
+    // elevator down
     codriver
         .b()
         .toggleOnTrue(
-            new AmpmechCommands(elevator, roller, elevatorTrigger, elevatorTrigger2, 2)
+            new AmpmechCommands(
+                    elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 3)
                 .withTimeout(3));
 
     // Intake Command

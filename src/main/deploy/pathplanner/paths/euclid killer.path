@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.51,
-        "y": 6.97
+        "x": 1.32,
+        "y": 5.604526163538672
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.5112660923540671,
-        "y": 6.97
+        "x": 2.3200000000000003,
+        "y": 5.604526163538672
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.3953711132389743,
-        "y": 6.319770454885513
+        "x": 6.999897276777648,
+        "y": 4.515646794622588
       },
       "prevControl": {
-        "x": 1.4045494183640332,
-        "y": 6.309326057406388
+        "x": 5.999897276777648,
+        "y": 4.515646794622588
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,14 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 48.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "amp side",
+  "folder": "Euclid killer",
   "previewStartingState": {
-    "rotation": 0.0,
-    "velocity": 0.0
+    "rotation": 0,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

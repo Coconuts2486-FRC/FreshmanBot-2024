@@ -19,7 +19,7 @@ public class Intake2 extends SubsystemBase {
   }
 
   public static void lightstop(boolean lightstop) {
-
+    // configure openloop ramp rate
     LoggedDashboardBoolean lightStop = new LoggedDashboardBoolean("Lightstop Triggered", lightstop);
   }
 }

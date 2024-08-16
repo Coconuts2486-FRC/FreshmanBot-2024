@@ -3,11 +3,13 @@
   "robotLength": 0.9624,
   "holonomicMode": true,
   "pathFolders": [
+    "Euclid killer",
     "amp side",
     "four note",
     "making things work"
   ],
   "autoFolders": [
+    "euclid killer",
     "amp side",
     "four note",
     "get it working",

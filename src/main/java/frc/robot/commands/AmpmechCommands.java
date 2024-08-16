@@ -13,18 +13,23 @@ public class AmpmechCommands extends Command {
 
   private final elevator m_subsystem;
   private final roller m_subsystem2;
-  private int step = 1;
+  private int step;
+  private int realStep = 0;
   private static double timer;
-  private int part = 0;
+  private int emergency;
+
+  private BooleanSupplier gonogo;
 
   public AmpmechCommands(
       elevator m_subsystem,
       roller m_subsystem2,
       BooleanSupplier stop,
       BooleanSupplier stop2,
-      int part) {
+      BooleanSupplier gonogo,
+      int step) {
     this.stop = stop;
-    this.part = part;
+    this.step = step;
+    this.gonogo = gonogo;
     this.m_subsystem = m_subsystem;
     this.m_subsystem2 = m_subsystem2;
     this.stop2 = stop2;
@@ -32,8 +37,7 @@ public class AmpmechCommands extends Command {
 
   @Override
   public void initialize() {
-    step = 1;
-    timer = Timer.getFPGATimestamp();
+    realStep = step;
   }
 
   @Override
@@ -45,42 +49,42 @@ public class AmpmechCommands extends Command {
     // step three = elevator goes down until it hits bottom limit switch
 
     // limit switches are reversed so when its not pressed it gives off true not false
-
-    if (part == 1) {
-      if (stop.getAsBoolean() == true) {
-        elevator.elevatorFunction(-0.50);
-      } else {
-        elevator.elevatorFunction(0);
-        step = 4;
-      }
-    } else {
-      elevator.elevatorFunction(0);
-    }
-
-    if (part == 2) {
-      if (step == 1) {
-        if (Timer.getFPGATimestamp() - timer > 0.75 // number of seconds the rollers spin
-        ) {
-          roller.rollerFunction(0, 0, 0);
-          step = 2;
-        } else {
-          roller.rollerFunction(-0.75, 0, 0);
-        }
-      }
-
-      if (step == 2) {
-        if (stop2.getAsBoolean() == true) {
-          elevator.elevatorFunction(0.33);
+    if (gonogo.getAsBoolean() == true) {
+      if (realStep == 1) {
+        if (stop.getAsBoolean() == true) {
+          elevator.elevatorFunction(-0.55);
         } else {
           elevator.elevatorFunction(0);
+          realStep = 2;
+          timer = Timer.getFPGATimestamp();
         }
+      }
+    } else if (realStep < 2) {
+      realStep = 5;
+    }
+
+    if (realStep == 2) {
+      if (Timer.getFPGATimestamp() - timer > 0.75 // number of seconds the rollers spin
+      ) {
+        roller.rollerFunction(0, 0, 0);
+        realStep = 3;
+      } else {
+        roller.rollerFunction(-0.75, 0, 0);
+      }
+    }
+
+    if (realStep == 3) {
+      if (stop2.getAsBoolean() == true) {
+        elevator.elevatorFunction(0.33);
+      } else {
+        elevator.elevatorFunction(0);
       }
     }
   }
 
   @Override
   public boolean isFinished() {
-    if (stop2.getAsBoolean() == false && step == 2 || step == 4) {
+    if (stop2.getAsBoolean() == false && realStep == 3 || realStep == 5) {
       return true;
     } else {
       return false;

@@ -1,5 +1,6 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ampmech.roller;
 import frc.robot.subsystems.intake.Intake2;
@@ -14,6 +15,7 @@ public class IntakeCommandauto extends Command {
   private final double bumper;
 
   private final BooleanSupplier limit;
+  private final BooleanSupplier eleavtor;
 
   public IntakeCommandauto(
       roller subsystem2,
@@ -21,12 +23,14 @@ public class IntakeCommandauto extends Command {
       double bumper,
       DoubleSupplier rightTrigger,
       DoubleSupplier leftTrigger,
-      BooleanSupplier limit) {
+      BooleanSupplier limit,
+      BooleanSupplier eleavtor) {
     m_subsystem = subsystem;
     this.bumper = bumper;
     this.rightTrigger = rightTrigger;
     this.leftTrigger = leftTrigger;
     this.limit = limit;
+    this.eleavtor = eleavtor;
   }
 
   @Override
@@ -38,7 +42,6 @@ public class IntakeCommandauto extends Command {
    */
   @Override
   public void execute() {
-    // LoggedDashboardBoolean hi = new LoggedDashboardBoolean("lit", limit.getAsBoolean());
     if (limit.getAsBoolean() == true) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
@@ -46,6 +49,8 @@ public class IntakeCommandauto extends Command {
       Intake2.intakeFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     }
+
+    SmartDashboard.putBoolean("lightstop", limit.getAsBoolean());
   }
 
   @Override

@@ -1,5 +1,6 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ampmech.roller;
 import frc.robot.subsystems.intake.Intake2;
@@ -41,13 +42,16 @@ public class IntakeCommand extends Command {
    */
   @Override
   public void execute() {
-    if (limit.getAsBoolean() == true && eleavtor.getAsBoolean() == false) {
+    if (limit.getAsBoolean() == true) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
+      System.out.println("I hate this robot");
     } else {
       Intake2.intakeFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
     }
+
+    SmartDashboard.putBoolean("lightstop", limit.getAsBoolean());
   }
 
   @Override

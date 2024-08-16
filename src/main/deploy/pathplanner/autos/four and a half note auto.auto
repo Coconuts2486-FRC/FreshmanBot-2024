@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2587578200067437,
+      "x": 1.26,
       "y": 5.531293435066112
     },
     "rotation": 0
@@ -18,7 +18,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "spinUp"
+                  "name": "spinUp1"
                 }
               },
               {
@@ -199,6 +199,70 @@
                             "type": "named",
                             "data": {
                               "name": "spinUp3"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "spinUp0"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "shoot"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "runIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "note 3"
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "return"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "spinUp2"
                             }
                           }
                         ]

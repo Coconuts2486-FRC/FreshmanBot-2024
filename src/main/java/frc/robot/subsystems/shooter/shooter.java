@@ -13,6 +13,9 @@ public class shooter extends SubsystemBase {
 
     shooterMotor1 = new TalonSRX(25);
     shooterMotor2 = new TalonSRX(26);
+
+    shooterMotor1.configOpenloopRamp(.1);
+    shooterMotor2.configOpenloopRamp(.1);
   }
 
   public static void shooterFunction(double speed) {
