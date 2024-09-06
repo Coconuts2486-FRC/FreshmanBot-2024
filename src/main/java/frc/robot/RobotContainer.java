@@ -177,13 +177,20 @@ public class RobotContainer {
             new AmpmechCommands(
                     elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 1)
                 .withTimeout(3));
-    // elevator down
+    // elevator emergency down
     codriver
         .b()
         .toggleOnTrue(
             new AmpmechCommands(
                     elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 3)
                 .withTimeout(3));
+
+    // elevator emergency up
+    codriver
+        .y()
+        .toggleOnTrue(
+            new AmpmechCommands(
+                elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 4));
 
     // Intake Command
 

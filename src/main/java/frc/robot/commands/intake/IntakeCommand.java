@@ -45,7 +45,7 @@ public class IntakeCommand extends Command {
     if (limit.getAsBoolean() == true) {
       Intake2.intakeFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(0, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
-      System.out.println("I hate this robot");
+
     } else {
       Intake2.intakeFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
       roller.rollerFunction(bumper, rightTrigger.getAsDouble(), -leftTrigger.getAsDouble());
