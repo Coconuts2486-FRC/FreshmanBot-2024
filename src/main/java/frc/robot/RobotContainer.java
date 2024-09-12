@@ -42,6 +42,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIONutBlend;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.intake.Intake2;
+import frc.robot.subsystems.shooter.pivot;
 import frc.robot.subsystems.shooter.shooter;
 import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -51,6 +52,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final climb climb = new climb();
+  private final pivot pivot = new pivot();
   private final elevator elevator = new elevator();
   private final roller roller = new roller();
   private final Intake2 intake = new Intake2();
@@ -216,8 +218,8 @@ public class RobotContainer {
                 () -> elevatorStop2.get()));
 
     // Climb Command
-    climbTriggerUp.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY()));
-    climbTriggerDown.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY()));
+    climbTriggerUp.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY(), pivot));
+    climbTriggerDown.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY(), pivot));
 
     // Drive Command
     drive.setDefaultCommand(
