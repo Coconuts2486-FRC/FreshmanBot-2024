@@ -30,6 +30,7 @@ import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.IntakeCommandauto;
+import frc.robot.commands.shooter.Pivot;
 import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
 import frc.robot.subsystems.ampmech.elevator;
@@ -172,6 +173,9 @@ public class RobotContainer {
     // shoot
     codriver.leftBumper().toggleOnTrue(new ShooterCommands(roller, 0.75));
 
+    // pivot
+    codriver.x().whileTrue(new Pivot(pivot));
+
     // ampmech Command
     codriver
         .a()
@@ -218,8 +222,8 @@ public class RobotContainer {
                 () -> elevatorStop2.get()));
 
     // Climb Command
-    climbTriggerUp.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY(), pivot));
-    climbTriggerDown.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY(), pivot));
+    climbTriggerUp.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY()));
+    climbTriggerDown.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY()));
 
     // Drive Command
     drive.setDefaultCommand(

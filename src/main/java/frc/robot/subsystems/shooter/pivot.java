@@ -6,20 +6,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class pivot extends SubsystemBase {
 
   private static TalonSRX pivotMotor;
-  //   PIDController hi = new PIDController(0, 0, 0);
+   //PIDController hi = new PIDController(1, 0, 0);
 
   public pivot() {
 
     // public static rev = new DutyCycleEncoder(3);
 
     // pivotMotor = new TalonSRX(26);
+
   }
 
-  public static void pivotFunction(double test) {
+  public void pivotFunction(double test) {
 
     System.out.println(test);
 
-    // hi.calcaulate(abs, set);
+    //hi.calcaulate(4, 0);
     // pivotMotor.set() how to do the pivot
   }
 }
