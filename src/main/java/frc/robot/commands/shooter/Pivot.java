@@ -1,17 +1,18 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.pivot;
 
 public class Pivot extends Command {
 
-  private final pivot test;
-  public static double besty;
-  public static final DutyCycleEncoder rev = new DutyCycleEncoder(3);
+  private static final DutyCycleEncoder encoderActual = new DutyCycleEncoder(3);
+  double encoder = encoderActual.getAbsolutePosition();
+  private final pivot pivot;
 
-  public Pivot(pivot test) {
-    this.test = test;
+  public Pivot(pivot pivot) {
+    this.pivot = pivot;
   }
 
   @Override
@@ -19,10 +20,11 @@ public class Pivot extends Command {
 
   @Override
   public void execute() {
-    test.pivotFunction(besty);
-    besty = rev.getAbsolutePosition() - 0.05;
+    pivot.pivotFunction(encoder, 0, 0);
+    SmartDashboard.putNumber("Pivot", encoder);
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(
+    boolean interrupted) {}
 }

@@ -174,7 +174,11 @@ public class RobotContainer {
     codriver.leftBumper().toggleOnTrue(new ShooterCommands(roller, 0.75));
 
     // pivot
+
     codriver.x().whileTrue(new Pivot(pivot));
+
+    codriver.povUp().whileTrue(new Pivot(pivot));
+    codriver.povDown().whileTrue(new Pivot(pivot));
 
     // ampmech Command
     codriver
