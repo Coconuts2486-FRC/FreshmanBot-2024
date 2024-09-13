@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AmpmechCommands;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
@@ -35,6 +36,9 @@ import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
+import frc.robot.subsystems.apriltagvision.AprilTagVision;
+import frc.robot.subsystems.apriltagvision.AprilTagVisionIO;
+import frc.robot.subsystems.apriltagvision.AprilTagVisionIOPhotonVision;
 import frc.robot.subsystems.climb.climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -58,6 +62,7 @@ public class RobotContainer {
   private final roller roller = new roller();
   private final Intake2 intake = new Intake2();
   private final shooter shooter = new shooter();
+  private final AprilTagVision aprilTagVision;
   private final DigitalInput intakeStop = new DigitalInput(0);
   private final DigitalInput elevatorStop = new DigitalInput(1);
   private final DigitalInput elevatorStop2 = new DigitalInput(2);
@@ -80,9 +85,14 @@ public class RobotContainer {
   private final LoggedDashboardNumber flywheelSpeedInput =
       new LoggedDashboardNumber("Flywheel Speed", 1500.0);
 
+  /** Returns the current AprilTag layout type. */
+  public AprilTagLayoutType getAprilTagLayoutType() {
+    return FieldConstants.defaultAprilTagType;
+  }
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    switch (Constants.currentMode) {
+    switch (Constants.getMode()) {
       case REAL:
 
         // Real robot, instantiate hardware IO implementation
@@ -99,6 +109,11 @@ public class RobotContainer {
                 new ModuleIONutBlend(2),
                 new ModuleIONutBlend(3));
         drive.setPose(new Pose2d());
+        aprilTagVision =
+            new AprilTagVision(
+                this::getAprilTagLayoutType,
+                new AprilTagVisionIOPhotonVision(this::getAprilTagLayoutType, "Photon_BW2"));
+
         break;
 
       case SIM:
@@ -110,6 +125,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
+        aprilTagVision = new AprilTagVision(this::getAprilTagLayoutType);
         break;
 
       default:
@@ -121,6 +137,10 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        aprilTagVision =
+            new AprilTagVision(
+                this::getAprilTagLayoutType, new AprilTagVisionIO() {}, new AprilTagVisionIO() {});
+
         break;
     }
 
