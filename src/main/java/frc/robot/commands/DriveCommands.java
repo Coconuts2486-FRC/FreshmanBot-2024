@@ -14,6 +14,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -28,6 +29,8 @@ import java.util.function.DoubleSupplier;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
+  private static final PIDController rotatePid = new PIDController(.2, 0, 0.0005);
+  public static double gyroYaw;
 
   private DriveCommands() {}
 
@@ -41,6 +44,9 @@ public class DriveCommands {
       DoubleSupplier omegaSupplier) {
     return Commands.run(
         () -> {
+          gyroYaw = drive.gyroAngles().getDegrees();
+          rotatePid.enableContinuousInput(0, 360);
+
           // This applys deadband
           double linearMagnitude =
               MathUtil.applyDeadband(
@@ -63,14 +69,26 @@ public class DriveCommands {
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
-          drive.runVelocity(
-              ChassisSpeeds.fromFieldRelativeSpeeds(
-                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                  omega * drive.getMaxAngularSpeedRadPerSec(),
-                  isFlipped
-                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                      : drive.getRotation()));
+
+          if (TargetTagCommand.target) {
+            drive.runVelocity(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                    linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                    linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                    rotatePid.calculate(drive.gyroAngles().getDegrees() - TargetTagCommand.freeze),
+                    isFlipped
+                        ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                        : drive.getRotation()));
+          } else {
+            drive.runVelocity(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                    linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                    linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                    omega * drive.getMaxAngularSpeedRadPerSec(),
+                    isFlipped
+                        ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                        : drive.getRotation()));
+          }
         },
         drive);
   }
