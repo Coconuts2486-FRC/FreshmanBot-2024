@@ -22,7 +22,7 @@ public class ShooterCommands extends Command {
 
   @Override
   public void execute() {
-    if (Timer.getFPGATimestamp() - timer > 1) {
+    if (Timer.getFPGATimestamp() - timer > 1.5) {
       roller.rollerFunction(0, 0, 0);
     } else {
       roller.rollerFunction(speed, 0, 0);

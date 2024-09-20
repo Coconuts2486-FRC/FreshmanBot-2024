@@ -52,7 +52,7 @@ public class AmpmechCommands extends Command {
     if (gonogo.getAsBoolean() == true) {
       if (realStep == 1) {
         if (stop.getAsBoolean() == true) {
-          elevator.elevatorFunction(-0.50);
+          elevator.elevatorFunction(-0.66);
         } else {
           elevator.elevatorFunction(0);
           realStep = 2;

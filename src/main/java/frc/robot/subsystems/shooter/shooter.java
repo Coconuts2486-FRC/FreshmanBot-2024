@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class shooter extends SubsystemBase {
@@ -21,5 +22,7 @@ public class shooter extends SubsystemBase {
   public static void shooterFunction(double speed) {
     shooterMotor1.set(ControlMode.PercentOutput, speed);
     shooterMotor2.set(ControlMode.PercentOutput, speed);
+    SmartDashboard.putNumber("Velocity1", shooterMotor1.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Velocity2", shooterMotor2.getSelectedSensorVelocity());
   }
 }

@@ -61,9 +61,13 @@ public class RobotContainer {
   private final DigitalInput intakeStop = new DigitalInput(0);
   private final DigitalInput elevatorStop = new DigitalInput(1);
   private final DigitalInput elevatorStop2 = new DigitalInput(2);
+  private final DigitalInput pivotBottom = new DigitalInput(4);
+  private final DigitalInput pivotTop = new DigitalInput(5);
   private Trigger intakeTrigger = new Trigger(intakeStop::get);
   private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
   private Trigger elevatorTrigger2 = new Trigger(elevatorStop2::get);
+  private Trigger pivotTrigger = new Trigger(pivotBottom::get);
+  private Trigger pivotTrigger2 = new Trigger(pivotTop::get);
   private BooleanSupplier intakeTrue = intakeStop::get;
 
   // Controller Setups
@@ -175,10 +179,16 @@ public class RobotContainer {
 
     // pivot
 
-    codriver.x().whileTrue(new Pivot(pivot));
+    codriver.x().toggleOnTrue(new Pivot(pivot, pivotTrigger, pivotTrigger2, 1));
 
-    codriver.povUp().whileTrue(new Pivot(pivot));
-    codriver.povDown().whileTrue(new Pivot(pivot));
+    codriver
+        .povUp()
+        .whileTrue(new Pivot(pivot, pivotTrigger, pivotTrigger2, 2))
+        .whileFalse(new Pivot(pivot, pivotTrigger, pivotTrigger2, 0));
+    codriver
+        .povDown()
+        .whileTrue(new Pivot(pivot, pivotTrigger, pivotTrigger2, 3))
+        .whileFalse(new Pivot(pivot, pivotTrigger, pivotTrigger2, 0));
 
     // ampmech Command
     codriver
@@ -219,7 +229,7 @@ public class RobotContainer {
             new IntakeCommand(
                 roller,
                 intake,
-                0.50,
+                0.5,
                 () -> 0,
                 () -> 0,
                 () -> intakeStop.get(),
