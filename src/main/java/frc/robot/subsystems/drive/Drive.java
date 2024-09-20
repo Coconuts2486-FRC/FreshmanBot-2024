@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.subsystems.apriltagvision.AprilTagVision;
 import frc.robot.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -274,6 +275,46 @@ public class Drive extends SubsystemBase {
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
     return MAX_ANGULAR_SPEED;
+  }
+  /**
+   * Compute the field-centric YAW to the SPEAKER AprilTag, as seen by PhotonVision
+   *
+   * <p>Returns the field-centric YAW to the SPEAKER in degrees. To aim the robot at the speaker,
+   * set the robot YAW equal to this value. If the speaker tag is not visible, this returns -999.9
+   * degrees!
+   *
+   * <p>NOTE: This function assumes "Always Blue Origin" convention for YAW, meaning that when
+   * alliance is BLUE, 0º is away from the alliance wall, and when alliance is RED, 180º is away
+   * from the alliance wall. A head-on speaker shot has the robot facing away from the alliance wall
+   * (i.e., the shooter is on the back of the robot).
+   *
+   * <p>NOTE: If we want the null result to return something other than -999.9, we can do that.
+   */
+  @AutoLogOutput(key = "Targeting/SpeakerYaw")
+  public static Rotation2d getSpeakerYaw() {
+
+    // No tag information, return default value
+    if (AprilTagVision.speakerPose == null) {
+      return new Rotation2d(Float.NaN);
+    }
+
+    // The YAW to the speaker is computed from the X and Y position along the floor.
+
+    Rotation2d yaw =
+        new Rotation2d(
+            Math.atan(AprilTagVision.robotPose.getY() / AprilTagVision.robotPose.getX()));
+
+    // Rotate by 180º if on the RED alliance
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      yaw = yaw.plus(new Rotation2d(Math.PI));
+    }
+
+    // Return the YAW value as a Rotation2d object
+    return yaw;
+  }
+
+  public Rotation2d gyroAngles() {
+    return gyroInputs.yawPosition;
   }
 
   /** Returns an array of module translations. */

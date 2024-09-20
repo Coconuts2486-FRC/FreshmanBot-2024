@@ -29,6 +29,7 @@ import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AmpmechCommands;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.TargetTagCommand;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.IntakeCommandauto;
 import frc.robot.commands.shooter.Pivot;
@@ -188,6 +189,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    // Target the speaker
+    driver.a().whileTrue(new TargetTagCommand());
 
     // shooter commands
 
