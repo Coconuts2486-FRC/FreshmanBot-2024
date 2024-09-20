@@ -199,7 +199,7 @@ public class RobotContainer {
 
     // pivot
 
-    codriver.x().toggleOnTrue(new Pivot(pivot, pivotTrigger, pivotTrigger2, 1));
+    // codriver.x().whileTrue(new Pivot(pivot, pivotTrigger, pivotTrigger2, 1));
 
     codriver
         .povUp()

@@ -33,9 +33,9 @@ public class Pivot extends Command {
     // 0.5 = subwoofer shot
     // 0.55 = podium shot
 
-    if (bottom.getAsBoolean() == false) {
+    if (bottom.getAsBoolean() == true && top.getAsBoolean() == true) {
       pivot.pivotFunction(0.5, encoder, auto);
-    } else if (bottom.getAsBoolean() == true) {
+    } else if (bottom.getAsBoolean() == false && top.getAsBoolean() == false) {
       pivot.pivotFunction(encoder, encoder, auto);
     }
 

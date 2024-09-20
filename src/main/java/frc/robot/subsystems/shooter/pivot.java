@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class pivot extends SubsystemBase {
   private double offset = 0.024;
   private static TalonSRX pivotMotor;
-  PIDController hi = new PIDController(1, 0, 0.001);
+  PIDController hi = new PIDController(0.5, 0, 0);
 
   public pivot() {
 
