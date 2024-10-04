@@ -207,12 +207,17 @@ public class RobotContainer {
 
     codriver
         .povUp()
-        .whileTrue(new Pivot(pivot, pivotTrigger, pivotTrigger2, 2))
-        .whileFalse(new Pivot(pivot, pivotTrigger, pivotTrigger2, 0));
+        .whileTrue(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 2))
+        .whileFalse(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 0));
     codriver
         .povDown()
-        .whileTrue(new Pivot(pivot, pivotTrigger, pivotTrigger2, 3))
-        .whileFalse(new Pivot(pivot, pivotTrigger, pivotTrigger2, 0));
+        .whileTrue(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 3))
+        .whileFalse(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 0));
+
+    driver
+        .x()
+        .toggleOnTrue(new Pivot(0.5,pivot, pivotTrigger, pivotTrigger2, 1))
+        .whileFalse(new Pivot(0,pivot, climbTriggerDown, elevatorTrigger, 0));
 
     // ampmech Command
     codriver

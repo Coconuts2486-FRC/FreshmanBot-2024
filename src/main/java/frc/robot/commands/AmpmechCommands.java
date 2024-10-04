@@ -78,6 +78,7 @@ public class AmpmechCommands extends Command {
         elevator.elevatorFunction(0.33);
       } else {
         elevator.elevatorFunction(0);
+        realStep = 5;
       }
     }
 
@@ -94,7 +95,7 @@ public class AmpmechCommands extends Command {
 
   @Override
   public boolean isFinished() {
-    if (stop2.getAsBoolean() == false && realStep == 3 || realStep == 5) {
+    if (realStep == 5) {
       return true;
     } else {
       return false;
