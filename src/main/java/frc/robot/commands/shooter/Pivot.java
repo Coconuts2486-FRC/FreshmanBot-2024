@@ -28,6 +28,7 @@ public class Pivot extends Command {
   @Override
   public void initialize() {}
 
+  //test2
   @Override
   public void execute() {
     encoder = encoderActual.getAbsolutePosition();
