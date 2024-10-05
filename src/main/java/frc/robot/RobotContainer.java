@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FieldConstants.AprilTagLayoutType;
@@ -32,7 +33,6 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TargetTagCommand;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.IntakeCommandauto;
-import frc.robot.commands.shooter.Pivot;
 import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
 import frc.robot.subsystems.ampmech.elevator;
@@ -67,14 +67,13 @@ public class RobotContainer {
   private final DigitalInput intakeStop = new DigitalInput(0);
   private final DigitalInput elevatorStop = new DigitalInput(1);
   private final DigitalInput elevatorStop2 = new DigitalInput(2);
-  private final DigitalInput pivotBottom = new DigitalInput(4);
-  private final DigitalInput pivotTop = new DigitalInput(5);
   private Trigger intakeTrigger = new Trigger(intakeStop::get);
   private Trigger elevatorTrigger = new Trigger(elevatorStop::get);
   private Trigger elevatorTrigger2 = new Trigger(elevatorStop2::get);
-  private Trigger pivotTrigger = new Trigger(pivotBottom::get);
-  private Trigger pivotTrigger2 = new Trigger(pivotTop::get);
   private BooleanSupplier intakeTrue = intakeStop::get;
+
+  // Commands
+  private FunctionalCommand m_MovePivot;
 
   // Controller Setups
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -114,7 +113,6 @@ public class RobotContainer {
             new AprilTagVision(
                 this::getAprilTagLayoutType,
                 new AprilTagVisionIOPhotonVision(this::getAprilTagLayoutType, "Photon_BW2"));
-
         break;
 
       case SIM:
@@ -141,9 +139,24 @@ public class RobotContainer {
         aprilTagVision =
             new AprilTagVision(
                 this::getAprilTagLayoutType, new AprilTagVisionIO() {}, new AprilTagVisionIO() {});
-
         break;
     }
+
+    // Define Commands
+    // private final Command m_MovePivot = new Commands.startEnd(() ->
+    // pivot.setSetpoint(Constants.kPivotSubwoofer),() -> pivot::disable,pivot);
+    this.m_MovePivot =
+        new FunctionalCommand(
+            // Enable the pivot on command start
+            pivot::enable,
+            // Move the pivot to the subwoofer
+            () -> pivot.setSetpoint(pivot.getSetpoint()),
+            // Disable the pivot at the end of the command
+            interrupted -> pivot.disable(),
+            // End the command when the pivot reaches its setpoint
+            () -> pivot.atSetpoint() == true,
+            // Require the pivot subsystem
+            pivot);
 
     // Set up auto routines
     // NamedCommands.registerCommand(
@@ -205,19 +218,16 @@ public class RobotContainer {
 
     // codriver.x().whileTrue(new Pivot(pivot, pivotTrigger, pivotTrigger2, 1));
 
+    // Command the Pivot -- driver presses 'X' to move to SUBWOOFER
+    driver.x().toggleOnTrue(this.m_MovePivot);
+
+    // Command the Pivot -- co-driver presses POV up and down to move up and down
     codriver
         .povUp()
-        .whileTrue(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 2))
-        .whileFalse(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 0));
+        .whileTrue(pivot.setpointCommand(pivot.getSetpoint() + 0.01).andThen(this.m_MovePivot));
     codriver
         .povDown()
-        .whileTrue(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 3))
-        .whileFalse(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 0));
-
-    driver
-        .x()
-        .toggleOnTrue(new Pivot(0.5,pivot, pivotTrigger, pivotTrigger2, 1))
-        .whileFalse(new Pivot(0,pivot, climbTriggerDown, elevatorTrigger, 0));
+        .whileTrue(pivot.setpointCommand(pivot.getSetpoint() - 0.01).andThen(this.m_MovePivot));
 
     // ampmech Command
     codriver

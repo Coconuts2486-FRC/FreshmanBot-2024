@@ -30,6 +30,26 @@ public final class Constants {
   private static RobotType robotType = RobotType.COMPBOT;
   public static final boolean tuningMode = false;
 
+  public static final class PivotConstants {
+
+    public static final double kPivotOffset = 0.;
+    public static final double kPivotMax = 0.99;
+    public static final double kPivotMin = 0.87;
+    public static final double kPivotTolerace = 0.005;
+    public static final double kPivotSubwoofer = 0.50;
+    public static final double kPivotPodium = 0.55;
+
+    // These are not real PID gains, and will have to be tuned for your specific robot.
+    public static final double kP = 0.5;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    // On a real robot the feedforward constants should be empirically determined; these are
+    // reasonable guesses.
+    public static final double kSVolts = 0.05;
+    public static final double kFeederSpeed = 0.5;
+  }
+
   public static RobotType getRobot() {
     if (!disableHAL && RobotBase.isReal() && robotType == RobotType.SIMBOT) {
       new Alert("Invalid robot selected, using competition robot as default.", AlertType.ERROR)
