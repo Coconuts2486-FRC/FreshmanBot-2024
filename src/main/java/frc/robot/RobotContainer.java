@@ -56,7 +56,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
+  private final Drive m_robotDrive;
   private final climb climb = new climb();
   private final pivot pivot = new pivot();
   private final elevator elevator = new elevator();
@@ -103,14 +103,14 @@ public class RobotContainer {
          * And whats a flywheel?
          * Otherwise I dont think this code is being used
          */
-        drive =
+        m_robotDrive =
             new Drive(
                 new GyroIOPigeon2(),
                 new ModuleIONutBlend(0),
                 new ModuleIONutBlend(1),
                 new ModuleIONutBlend(2),
                 new ModuleIONutBlend(3));
-        drive.setPose(new Pose2d());
+        m_robotDrive.setPose(new Pose2d());
         aprilTagVision =
             new AprilTagVision(
                 this::getAprilTagLayoutType,
@@ -120,7 +120,7 @@ public class RobotContainer {
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive =
+        m_robotDrive =
             new Drive(
                 new GyroIO() {},
                 new ModuleIOSim(),
@@ -132,7 +132,7 @@ public class RobotContainer {
 
       default:
         // Replayed robot, disable IO implementations
-        drive =
+        m_robotDrive =
             new Drive(
                 new GyroIO() {},
                 new ModuleIO() {},
@@ -192,7 +192,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Target the speaker
-    driver.a().whileTrue(new TargetTagCommand());
+    driver
+        .a()
+        .whileTrue(
+            new TargetTagCommand(
+                m_robotDrive,
+                () -> driver.getLeftY(),
+                () -> driver.getLeftX(),
+                m_robotDrive.getSpeakerYaw().getDegrees()));
 
     // shooter commands
 
@@ -271,9 +278,13 @@ public class RobotContainer {
     climbTriggerDown.whileTrue(new ClimbCommand(climb, () -> codriver.getRightY()));
 
     // Drive Command
-    drive.setDefaultCommand(
+    m_robotDrive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive, () -> driver.getLeftY(), () -> driver.getLeftX(), () -> driver.getRightX()));
+            m_robotDrive,
+            () -> driver.getLeftY(),
+            () -> driver.getLeftX(),
+            () -> driver.getRightX()));
+
     // driver.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     /* controller
     *   .y()
@@ -286,7 +297,7 @@ public class RobotContainer {
                .ignoringDisable(true));  */
 
     // Gryo reset button
-    driver.y().toggleOnTrue(Commands.runOnce(() -> drive.zero(), drive));
+    driver.y().toggleOnTrue(Commands.runOnce(() -> m_robotDrive.zero(), m_robotDrive));
     // driver
     //     .a()
     //     .whileTrue(
