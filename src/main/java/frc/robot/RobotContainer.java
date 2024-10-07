@@ -75,6 +75,7 @@ public class RobotContainer {
   private Trigger pivotTrigger = new Trigger(pivotBottom::get);
   private Trigger pivotTrigger2 = new Trigger(pivotTop::get);
   private BooleanSupplier intakeTrue = intakeStop::get;
+  // private BooleanSupplier topthng = pivotTop::get;
 
   // Controller Setups
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -207,17 +208,18 @@ public class RobotContainer {
 
     codriver
         .povUp()
-        .whileTrue(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 2))
-        .whileFalse(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 0));
+        .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0.15))
+        .whileFalse(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0));
     codriver
         .povDown()
-        .whileTrue(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 3))
-        .whileFalse(new Pivot(0,pivot, pivotTrigger, pivotTrigger2, 0));
+        .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, -0.1))
+        .whileFalse(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0));
 
-    driver
-        .x()
-        .toggleOnTrue(new Pivot(0.5,pivot, pivotTrigger, pivotTrigger2, 1))
-        .whileFalse(new Pivot(0,pivot, climbTriggerDown, elevatorTrigger, 0));
+    driver.leftBumper().toggleOnTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 2, -0.1));
+    // driver
+    //     .x()
+    //     .toggleOnTrue(new Pivot(0.5, pivot, pivotTrigger, pivotTrigger2, 1))
+    //     .whileFalse(new Pivot(0, pivot, climbTriggerDown, elevatorTrigger, 0));
 
     // ampmech Command
     codriver

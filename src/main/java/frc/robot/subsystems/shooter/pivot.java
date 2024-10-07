@@ -3,12 +3,15 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class pivot extends SubsystemBase {
   private double offset = 0.024;
   private static TalonSRX pivotMotor;
   PIDController pivot = new PIDController(0.5, 0, 0);
+  private static final DutyCycleEncoder encoderActual = new DutyCycleEncoder(3);
+  // private doublesuppier encoder = encoderActual;
 
   public pivot() {
 
@@ -16,13 +19,26 @@ public class pivot extends SubsystemBase {
   }
 
   public void pivotFunction(
-      double posisitionWanted, double posisitionCurrent, int manuel, double speed) {
-
-    if (manuel == 1) {
-      pivotMotor.set(ControlMode.PercentOutput, pivot.calculate(posisitionCurrent, posisitionWanted));
-    } else if (manuel == 2) {
+      double posisitionWanted,
+      double posisitionCurrent,
+      int manuel,
+      double speed,
+      boolean move,
+      boolean move2) {
+    if (move == false && speed < 0) {
+      // if (manuel == 2) {
       pivotMotor.set(ControlMode.PercentOutput, speed);
+      // }
+    } else if (move2 == true && speed > 0) {
+      // if (manuel == 2) {
+      pivotMotor.set(ControlMode.PercentOutput, speed);
+      // }
+    } else {
+      pivotMotor.set(ControlMode.PercentOutput, 0);
     }
-    // pivotMotor.set() how to do the pivot
+  }
+
+  public void periodic() {
+    // SmartDashboard.putNumber("Pivot", encoderActual);
   }
 }

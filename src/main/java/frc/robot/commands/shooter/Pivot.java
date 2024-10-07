@@ -1,6 +1,5 @@
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.pivot;
@@ -8,32 +7,39 @@ import java.util.function.BooleanSupplier;
 
 public class Pivot extends Command {
 
+  private double speed;
   private BooleanSupplier bottom;
   private BooleanSupplier top;
   private double posisition;
   private double offset = 0; // 0.38;
   private int manuel;
-  private static final DutyCycleEncoder encoderActual = new DutyCycleEncoder(3);
+
   private static double encoder;
   private final pivot pivot;
 
-  public Pivot(double posisition, pivot pivot, BooleanSupplier bottom, BooleanSupplier top, int manuel) {
+  public Pivot(
+      double posisition,
+      pivot pivot,
+      BooleanSupplier bottom,
+      BooleanSupplier top,
+      int manuel,
+      double speed) {
     this.pivot = pivot;
     this.bottom = bottom;
     this.top = top;
     this.manuel = manuel;
     this.posisition = posisition;
+    this.speed = speed;
   }
 
   @Override
   public void initialize() {}
 
-  //test
-  //test2
+  // test
+  // test2
   @Override
   public void execute() {
-    encoder = encoderActual.getAbsolutePosition();
-    SmartDashboard.putNumber("Pivot", encoder);
+
     SmartDashboard.putBoolean("TopPivot", top.getAsBoolean());
     SmartDashboard.putBoolean("BottomPivot", bottom.getAsBoolean());
     // top pivot value is opossite
@@ -45,18 +51,11 @@ public class Pivot extends Command {
     // } else if (bottom.getAsBoolean() == true && top.getAsBoolean() == true) {
     //   pivot.pivotFunction(encoder, encoder, auto);
     // }
-    if (manuel == 1 && top.getAsBoolean() == true && bottom.getAsBoolean() == false && encoder > 0.87 && encoder < 0.99)  {
-      pivot.pivotFunction(posisition, encoder, 1, 0);
-    } else if (manuel == 2 && top.getAsBoolean() == true && encoder > 0.87) {
-      pivot.pivotFunction(0, 0, 2, 0.25);
-    } else if (manuel == 3 && bottom.getAsBoolean() == false && encoder < 0.99) {
-      pivot.pivotFunction(0, 0, 2, -0.25); 
-    } else if (manuel == 0) {
-      pivot.pivotFunction(0, 0, 2, 0.0);
-    } else{
-      pivot.pivotFunction(0, 0, 2, 0.0);
-      manuel = 0;
-    }
+    // if (manuel == 1 && top.getAsBoolean() == true && bottom.getAsBoolean() == false) {
+    //   pivot.pivotFunction(posisition, encoder, 1, 0, bottom.getAsBoolean(), top.getAsBoolean());
+    // } else
+
+    pivot.pivotFunction(0, 0, manuel, speed, bottom.getAsBoolean(), top.getAsBoolean());
   }
 
   // SmartDashboard.putBoolean("limit switch test", bottom.getAsBoolean());
@@ -66,13 +65,9 @@ public class Pivot extends Command {
 
   @Override
   public boolean isFinished() {
-    if (top.getAsBoolean() == false && manuel == 1) {
+    if (manuel == 2 && bottom.getAsBoolean() || top.getAsBoolean()) {
       return true;
-    } else if (bottom.getAsBoolean() == true && manuel == 1) {
-      return true;
-    } else if (manuel == 0) {
-      return true;
-    }else {
+    } else {
       return false;
     }
   }
