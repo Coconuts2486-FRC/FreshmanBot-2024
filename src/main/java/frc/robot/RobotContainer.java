@@ -215,7 +215,14 @@ public class RobotContainer {
         .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, -0.1))
         .whileFalse(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0));
 
-    driver.leftBumper().toggleOnTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 2, -0.1));
+    codriver.x().onTrue(new Pivot(0.95, pivot, pivotTrigger, pivotTrigger2, 2, 0));
+
+    driver
+        .leftBumper()
+        .toggleOnTrue(
+            new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 2, -0.3)
+                .until(pivotTrigger::getAsBoolean));
+    // codriver.y().toggleOnTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 2, 0.50));
     // driver
     //     .x()
     //     .toggleOnTrue(new Pivot(0.5, pivot, pivotTrigger, pivotTrigger2, 1))
@@ -237,8 +244,8 @@ public class RobotContainer {
                 .withTimeout(3));
 
     // elevator emergency up
-    codriver
-        .y()
+    driver
+        .x()
         .toggleOnTrue(
             new AmpmechCommands(
                 elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 4));

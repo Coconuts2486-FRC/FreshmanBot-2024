@@ -40,6 +40,7 @@ public class Pivot extends Command {
   @Override
   public void execute() {
 
+    pivot.periodic();
     SmartDashboard.putBoolean("TopPivot", top.getAsBoolean());
     SmartDashboard.putBoolean("BottomPivot", bottom.getAsBoolean());
     // top pivot value is opossite
@@ -55,7 +56,7 @@ public class Pivot extends Command {
     //   pivot.pivotFunction(posisition, encoder, 1, 0, bottom.getAsBoolean(), top.getAsBoolean());
     // } else
 
-    pivot.pivotFunction(0, 0, manuel, speed, bottom.getAsBoolean(), top.getAsBoolean());
+    pivot.pivotFunction(0, manuel, speed, bottom.getAsBoolean(), top.getAsBoolean());
   }
 
   // SmartDashboard.putBoolean("limit switch test", bottom.getAsBoolean());
@@ -63,12 +64,12 @@ public class Pivot extends Command {
   @Override
   public void end(boolean interrupted) {}
 
-  @Override
-  public boolean isFinished() {
-    if (manuel == 2 && bottom.getAsBoolean() || top.getAsBoolean()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // @Override
+  // public boolean isFinished() {
+  //   if (manuel == 2 && bottom.getAsBoolean() || top.getAsBoolean()) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 }
