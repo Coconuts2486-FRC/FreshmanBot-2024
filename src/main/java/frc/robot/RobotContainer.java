@@ -257,7 +257,6 @@ public class RobotContainer {
                     elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 3)
                 .withTimeout(3));
 
-   
     // driver
     //     .x()
     //     .toggleOnTrue(
