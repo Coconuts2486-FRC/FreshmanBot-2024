@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3846958253084245,
+      "y": 6.4692244859132115
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARL Auto Start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARL Centerline note 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARL Centerline Shoot 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARL Centerline note 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARL Centerline Shoot 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARL Centerline note 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARL Centerline Shoot 3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "ARL Champs Amp Side Auto",
+  "choreoAuto": false
+}

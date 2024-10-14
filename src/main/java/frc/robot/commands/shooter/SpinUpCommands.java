@@ -5,10 +5,10 @@ import frc.robot.subsystems.shooter.shooter;
 
 public class SpinUpCommands extends Command {
 
-  private shooter m_subsystem;
+  private shooter shooterSubsystem;
 
   public SpinUpCommands(shooter shooterSubsystem) {
-    this.m_subsystem = shooterSubsystem;
+    this.shooterSubsystem = shooterSubsystem;
   }
 
   @Override
@@ -16,11 +16,11 @@ public class SpinUpCommands extends Command {
 
   @Override
   public void execute() {
-    shooter.shooterFunction(0.72);
+    shooterSubsystem.shooterFunction(0.72);
   }
 
   @Override
   public void end(boolean interrupted) {
-    shooter.shooterFunction(0);
+    shooterSubsystem.shooterFunction(0);
   }
 }

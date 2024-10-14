@@ -56,13 +56,15 @@ public class Pivot extends Command {
     //   pivot.pivotFunction(posisition, encoder, 1, 0, bottom.getAsBoolean(), top.getAsBoolean());
     // } else
 
-    pivot.pivotFunction(0, manuel, speed, bottom.getAsBoolean(), top.getAsBoolean());
+    pivot.pivotFunction(posisition, manuel, speed, bottom.getAsBoolean(), top.getAsBoolean());
   }
 
   // SmartDashboard.putBoolean("limit switch test", bottom.getAsBoolean());
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    pivot.pivotFunction(0, manuel, 0, bottom.getAsBoolean(), top.getAsBoolean());
+  }
 
   // @Override
   // public boolean isFinished() {

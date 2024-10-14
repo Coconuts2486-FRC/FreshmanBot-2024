@@ -3,14 +3,16 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.apriltagvision.AprilTagVision;
 
 public class pivot extends SubsystemBase {
   private double offset = 0.024;
   private static TalonSRX pivotMotor;
-  PIDController pivotPID = new PIDController(-0.5, 0, 0);
+  PIDController pivotPID = new PIDController(12, 0, 0);
   private static final DutyCycleEncoder encoderActual = new DutyCycleEncoder(3);
   double encoder;
   // private doublesuppier encoder = encoderActual;
@@ -40,7 +42,27 @@ public class pivot extends SubsystemBase {
     }
   }
 
+  public void setPosisition(double posisitonWanted) {
+    pivotMotor.set(
+        ControlMode.PercentOutput,
+        -pivotPID.calculate(encoderActual.getAbsolutePosition(), posisitonWanted));
+  }
+
+  public void stop() {
+    pivotMotor.set(ControlMode.PercentOutput, 0);
+  }
+
+  public double getSpeakerDistance() {
+    if (AprilTagVision.speakerPose == null) {
+      return -999.9;
+    }
+
+    return Units.metersToInches(
+        Math.hypot(AprilTagVision.speakerPose.getX(), AprilTagVision.speakerPose.getY()));
+  }
+
   public void periodic() {
+    SmartDashboard.putNumber("Speaker Distance", getSpeakerDistance());
     encoder = encoderActual.getAbsolutePosition();
     SmartDashboard.putNumber("Pivot", encoder);
   }

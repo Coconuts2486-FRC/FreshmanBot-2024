@@ -33,8 +33,10 @@ import frc.robot.commands.TargetTagCommand;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.IntakeCommandauto;
 import frc.robot.commands.shooter.Pivot;
+import frc.robot.commands.shooter.QuickShoot;
 import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
+import frc.robot.commands.shooter.setpoint;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
@@ -57,6 +59,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  // private final AprilTagVision aprilTagVision = new AprilTagVision(this::getAprilTagLayoutType,
+  // new AprilTagVisionIOPhotonVision(this::getAprilTagLayoutType));
   private final climb climb = new climb();
   private final pivot pivot = new pivot();
   private final elevator elevator = new elevator();
@@ -114,7 +118,7 @@ public class RobotContainer {
         aprilTagVision =
             new AprilTagVision(
                 this::getAprilTagLayoutType,
-                new AprilTagVisionIOPhotonVision(this::getAprilTagLayoutType, "Photon_BW2"));
+                new AprilTagVisionIOPhotonVision(this::getAprilTagLayoutType, "Photon_BW1"));
 
         break;
 
@@ -197,10 +201,10 @@ public class RobotContainer {
     // shooter commands
 
     // spin up
-    codriver.rightBumper().whileTrue(new SpinUpCommands(shooter));
+    codriver.rightBumper().whileTrue(new QuickShoot(roller, shooter));
 
     // shoot
-    codriver.leftBumper().toggleOnTrue(new ShooterCommands(roller, 0.75));
+    // codriver.leftBumper().toggleOnTrue(new ShooterCommands(roller, 0.75));
 
     // pivot
 
@@ -208,14 +212,16 @@ public class RobotContainer {
 
     codriver
         .povUp()
-        .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0.15))
+        .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0.1))
         .whileFalse(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0));
     codriver
         .povDown()
-        .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, -0.1))
+        .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, -0.05))
         .whileFalse(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0));
 
-    codriver.x().onTrue(new Pivot(0.95, pivot, pivotTrigger, pivotTrigger2, 2, 0));
+    codriver.x().whileTrue(new setpoint(pivot, 0.885));
+
+    // codriver.x().whileTrue(new Pivot(0.95, pivot, pivotTrigger, pivotTrigger2, 2, 0));
 
     driver
         .leftBumper()

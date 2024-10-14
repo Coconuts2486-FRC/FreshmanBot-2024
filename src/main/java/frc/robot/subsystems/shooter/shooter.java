@@ -15,11 +15,15 @@ public class shooter extends SubsystemBase {
     shooterMotor1 = new TalonSRX(25);
     shooterMotor2 = new TalonSRX(26);
 
-    shooterMotor1.configOpenloopRamp(.1);
-    shooterMotor2.configOpenloopRamp(.1);
+    shooterMotor1.configOpenloopRamp(.01);
+    shooterMotor2.configOpenloopRamp(.01);
   }
 
-  public static void shooterFunction(double speed) {
+  public double getSpeed() {
+    return shooterMotor1.getSelectedSensorVelocity();
+  }
+
+  public void shooterFunction(double speed) {
     shooterMotor1.set(ControlMode.PercentOutput, speed);
     shooterMotor2.set(ControlMode.PercentOutput, speed);
     SmartDashboard.putNumber("Velocity1", shooterMotor1.getSelectedSensorVelocity());

@@ -4,11 +4,13 @@
   "holonomicMode": true,
   "pathFolders": [
     "Euclid killer",
+    "ARL Champ Amp Side",
     "amp side",
     "four note",
     "making things work"
   ],
   "autoFolders": [
+    "ARL Champs Amp Side Auto",
     "amp side",
     "euclid killer",
     "four note",

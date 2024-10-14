@@ -12,6 +12,7 @@ public class ShooterCommands extends Command {
 
   public ShooterCommands(roller ampSubsystem, double speed) {
     this.m_subsystem2 = ampSubsystem;
+
     this.speed = speed;
   }
 
