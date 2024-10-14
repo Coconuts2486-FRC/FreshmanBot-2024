@@ -36,6 +36,7 @@ import frc.robot.commands.shooter.Pivot;
 import frc.robot.commands.shooter.QuickShoot;
 import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
+import frc.robot.commands.shooter.regression;
 import frc.robot.commands.shooter.setpoint;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
@@ -203,6 +204,8 @@ public class RobotContainer {
                 () -> driver.getLeftX(),
                 m_robotDrive.getSpeakerYaw().getDegrees()));
 
+    codriver.x().whileTrue(new regression(pivot));
+
     // shooter commands
 
     // spin up
@@ -254,12 +257,12 @@ public class RobotContainer {
                     elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 3)
                 .withTimeout(3));
 
-    // elevator emergency up
-    driver
-        .x()
-        .toggleOnTrue(
-            new AmpmechCommands(
-                elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 4));
+   
+    // driver
+    //     .x()
+    //     .toggleOnTrue(
+    //         new AmpmechCommands(
+    //             elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 4));
 
     // Intake Command
 
