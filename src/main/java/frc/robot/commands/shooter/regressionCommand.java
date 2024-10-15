@@ -4,19 +4,22 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.apriltagvision.AprilTagVision;
 import frc.robot.subsystems.shooter.pivot;
 
-public class regression extends Command {
+public class regressionCommand extends Command {
   pivot pivot;
+  AprilTagVision aprilTagVision;
   private double freezeRegress;
 
-  public regression(pivot pivot) {
+  public regressionCommand(pivot pivot, AprilTagVision aprilTagVision) {
     this.pivot = pivot;
+    this.aprilTagVision = aprilTagVision;
   }
 
   @Override
   public void initialize() {
-    freezeRegress = pivot.getSpeakerDistance();
+    freezeRegress = aprilTagVision.getSpeakerDistance();
   }
 
   @Override

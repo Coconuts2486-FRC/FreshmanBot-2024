@@ -23,8 +23,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.subsystems.apriltagvision.AprilTagVisionIO.AprilTagVisionIOInputs;
 import frc.robot.util.GeomUtil;
@@ -57,8 +59,8 @@ public class AprilTagVision extends VirtualSubsystem {
   private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
 
   // Pose Variables
-  static Pose2d robotPose = null;
-  static Pose3d speakerPose = null;
+  private Pose2d robotPose = null;
+  private Pose3d speakerPose = null;
   private Translation3d speakerTranslation = null;
   private Rotation3d robotRotation = null;
   private Pose3d thisSpeakerPose = null;
@@ -172,17 +174,76 @@ public class AprilTagVision extends VirtualSubsystem {
                 (rtrans0.getY() + rtrans1.getY()) / 2.0,
                 rrot0.plus(rrot1).div(2.0));
     }
+
+    // Send any desired Vision-related data to the SmartDashboard
+    SmartDashboard.putNumber("Speaker Distance", getSpeakerDistance());
   }
 
   /** Speaker Pose Getter Method */
-  public static Pose3d getSpeakerPose() {
+  public Pose3d getSpeakerPose() {
     Logger.recordOutput("Targeting/getSpeakerPose", speakerPose);
     return speakerPose;
   }
 
   /** Robot Pose Getter Method */
-  public static Pose2d getRobotPose() {
+  public Pose2d getRobotPose() {
     Logger.recordOutput("Targeting/getRobotPose", robotPose);
     return robotPose;
+  }
+
+  /**
+   * Compute the field-centric YAW to the SPEAKER AprilTag, as seen by PhotonVision
+   *
+   * <p>Returns the field-centric YAW to the SPEAKER in degrees. To aim the robot at the speaker,
+   * set the robot YAW equal to this value. If the speaker tag is not visible, this returns -999.9
+   * degrees!
+   *
+   * <p>NOTE: This function assumes "Always Blue Origin" convention for YAW, meaning that when
+   * alliance is BLUE, 0º is away from the alliance wall, and when alliance is RED, 180º is away
+   * from the alliance wall. A head-on speaker shot has the robot facing away from the alliance wall
+   * (i.e., the shooter is on the back of the robot).
+   *
+   * <p>NOTE: If we want the null result to return something other than -999.9, we can do that.
+   */
+  public Rotation2d getSpeakerYaw() {
+
+    // No tag information, return default value
+    if (getSpeakerPose() == null) {
+      Logger.recordOutput("Targeting/dumbThing", getSpeakerPose());
+      Logger.recordOutput("Targeting/SpeakerYaw", Float.NaN);
+      Logger.recordOutput("Targeting/speakerNull", true);
+      return new Rotation2d(Float.NaN);
+    }
+    Logger.recordOutput("Targeting/speakerNull", false);
+    Logger.recordOutput("Targeting/dumbThing", getSpeakerPose());
+
+    // The YAW to the speaker is computed from the X and Y position along the floor.
+    Rotation2d yaw = new Rotation2d(Math.atan(getRobotPose().getY() / getRobotPose().getX()));
+
+    // Rotate by 180º if on the RED alliance
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      yaw = yaw.plus(new Rotation2d(Math.PI));
+    }
+
+    Logger.recordOutput("Targeting/SpeakerYaw", yaw.getDegrees());
+
+    // Return the YAW value as a Rotation2d object
+    return yaw;
+  }
+
+  /**
+   * Compute the distance to the SPEAKER AprilTag, as seen by PhotonVision
+   *
+   * <p>Returns the distance to the SPEAKER in inches. If the speaker tag is not visible, this
+   * returns -999.9 inches!
+   *
+   * <p>NOTE: If we want the null result to return something other than -999.9, we can do that.
+   */
+  public double getSpeakerDistance() {
+    if (getSpeakerPose() == null) {
+      return -999.9;
+    }
+
+    return Units.metersToInches(Math.hypot(getSpeakerPose().getX(), getSpeakerPose().getY()));
   }
 }
