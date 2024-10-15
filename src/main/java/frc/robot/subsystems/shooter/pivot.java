@@ -53,12 +53,12 @@ public class pivot extends SubsystemBase {
   }
 
   public double getSpeakerDistance() {
-    if (AprilTagVision.speakerPose == null) {
+    if (AprilTagVision.getSpeakerPose() == null) {
       return -999.9;
     }
 
     return Units.metersToInches(
-        Math.hypot(AprilTagVision.speakerPose.getX(), AprilTagVision.speakerPose.getY()));
+        Math.hypot(AprilTagVision.getSpeakerPose().getX(), AprilTagVision.getSpeakerPose().getY()));
   }
 
   public void periodic() {

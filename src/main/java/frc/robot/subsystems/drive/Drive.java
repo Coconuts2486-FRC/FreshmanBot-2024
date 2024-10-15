@@ -291,24 +291,30 @@ public class Drive extends SubsystemBase {
    *
    * <p>NOTE: If we want the null result to return something other than -999.9, we can do that.
    */
-  @AutoLogOutput(key = "Targeting/SpeakerYaw")
   public static Rotation2d getSpeakerYaw() {
 
     // No tag information, return default value
-    if (AprilTagVision.speakerPose == null) {
+    if (AprilTagVision.getSpeakerPose() == null) {
+      Logger.recordOutput("Targeting/dumbThing", AprilTagVision.getSpeakerPose());
+      Logger.recordOutput("Targeting/SpeakerYaw", Float.NaN);
+      Logger.recordOutput("Targeting/speakerNull", true);
       return new Rotation2d(Float.NaN);
     }
+    Logger.recordOutput("Targeting/speakerNull", false);
+    Logger.recordOutput("Targeting/dumbThing", AprilTagVision.getSpeakerPose());
 
     // The YAW to the speaker is computed from the X and Y position along the floor.
 
     Rotation2d yaw =
         new Rotation2d(
-            Math.atan(AprilTagVision.robotPose.getY() / AprilTagVision.robotPose.getX()));
+            Math.atan(AprilTagVision.getRobotPose().getY() / AprilTagVision.getRobotPose().getX()));
 
     // Rotate by 180º if on the RED alliance
     if (DriverStation.getAlliance().get() == Alliance.Red) {
       yaw = yaw.plus(new Rotation2d(Math.PI));
     }
+
+    Logger.recordOutput("Targeting/SpeakerYaw", yaw.getDegrees());
 
     // Return the YAW value as a Rotation2d object
     return yaw;
@@ -333,6 +339,7 @@ public class Drive extends SubsystemBase {
    *
    * @return the robot's heading in degrees, from 180 to 180
    */
+  @AutoLogOutput(key = "Targeting/GetHeading")
   public double getHeading() {
     return Math.IEEEremainder(rawGyroRotation.getDegrees(), 360)
         * (DriveConstants.kGyroReversed ? -1.0 : 1.0);

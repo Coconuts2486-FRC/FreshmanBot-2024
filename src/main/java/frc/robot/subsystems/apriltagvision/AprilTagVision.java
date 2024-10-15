@@ -56,15 +56,13 @@ public class AprilTagVision extends VirtualSubsystem {
   private final Map<Integer, Double> lastFrameTimes = new HashMap<>();
   private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
 
-  // Something to do with demo?
-  private Pose3d demoTagPose = null;
-  private double lastDemoTagPoseTimestamp = 0.0;
-  public static Pose2d robotPose = null;
-  public static Pose3d speakerPose = null;
-  private static Translation3d speakerTranslation = null;
-  private static Rotation3d robotRotation = null;
-  private static Pose3d thisSpeakerPose = null;
-  private static Pose3d thisRobotPose = null;
+  // Pose Variables
+  static Pose2d robotPose = null;
+  static Pose3d speakerPose = null;
+  private Translation3d speakerTranslation = null;
+  private Rotation3d robotRotation = null;
+  private Pose3d thisSpeakerPose = null;
+  private Pose3d thisRobotPose = null;
 
   // Class method definition, including inputs
   public AprilTagVision(Supplier<AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
@@ -99,8 +97,10 @@ public class AprilTagVision extends VirtualSubsystem {
 
       // Exit if no targets
       if (targets == null) {
+        Logger.recordOutput("PhotonVision/N_Targets", 0);
         continue;
       }
+      Logger.recordOutput("PhotonVision/N_Targets", targets.size());
 
       // Loop over found targets
       for (PhotonTrackedTarget target : targets) {
@@ -127,13 +127,16 @@ public class AprilTagVision extends VirtualSubsystem {
           allRobotPoses.add(thisRobotPose.toPose2d());
 
           // Log the relevant information to AdvantageKit
-          Logger.recordOutput("PhotonVision/Speaker_" + inputs[instanceIndex].camname, speakerPose);
+          Logger.recordOutput(
+              "PhotonVision/Speaker_" + inputs[instanceIndex].camname, thisSpeakerPose);
           Logger.recordOutput(
               "PhotonVision/Robot2d_" + inputs[instanceIndex].camname,
               robotRotation.toRotation2d());
         }
       }
     }
+    Logger.recordOutput("Targeting/SwitchStatement", allSpeakerPoses3d.size());
+
     // Set output value based on number of tags seen
     switch ((int) allSpeakerPoses3d.size()) {
       case 0:
@@ -145,6 +148,8 @@ public class AprilTagVision extends VirtualSubsystem {
         // One tag seen, return it
         speakerPose = allSpeakerPoses3d.get(0);
         robotPose = allRobotPoses.get(0);
+        Logger.recordOutput("Targeting/SpeakerPose", speakerPose);
+        Logger.recordOutput("Targeting/RobotPose", robotPose);
         break;
       default:
         // Otherwise, compute the average speakerPose
@@ -167,5 +172,17 @@ public class AprilTagVision extends VirtualSubsystem {
                 (rtrans0.getY() + rtrans1.getY()) / 2.0,
                 rrot0.plus(rrot1).div(2.0));
     }
+  }
+
+  /** Speaker Pose Getter Method */
+  public static Pose3d getSpeakerPose() {
+    Logger.recordOutput("Targeting/getSpeakerPose", speakerPose);
+    return speakerPose;
+  }
+
+  /** Robot Pose Getter Method */
+  public static Pose2d getRobotPose() {
+    Logger.recordOutput("Targeting/getRobotPose", robotPose);
+    return robotPose;
   }
 }
