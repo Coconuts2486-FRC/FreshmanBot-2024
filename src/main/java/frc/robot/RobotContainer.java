@@ -36,7 +36,8 @@ import frc.robot.commands.shooter.Pivot;
 import frc.robot.commands.shooter.QuickShoot;
 import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
-import frc.robot.commands.shooter.regression;
+import frc.robot.commands.shooter.regressionCommand;
+import frc.robot.commands.shooter.setpoint;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
@@ -201,9 +202,9 @@ public class RobotContainer {
                 m_robotDrive,
                 () -> driver.getLeftY(),
                 () -> driver.getLeftX(),
-                m_robotDrive.getSpeakerYaw().getDegrees()));
+                aprilTagVision.getSpeakerYaw().getDegrees()));
 
-    codriver.x().whileTrue(new regression(pivot));
+    codriver.x().whileTrue(new regressionCommand(pivot, aprilTagVision));
 
     // shooter commands
 
