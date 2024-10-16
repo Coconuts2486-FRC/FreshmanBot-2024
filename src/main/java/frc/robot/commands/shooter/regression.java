@@ -12,6 +12,7 @@ public class regression extends Command {
 
   public regression(pivot pivot) {
     this.pivot = pivot;
+    addRequirements(pivot);
   }
 
   @Override
@@ -21,6 +22,7 @@ public class regression extends Command {
 
   @Override
   public void execute() {
+
     double a = 2.9629E-8;
     double b = -0.0000154932;
     double c = 0.00288892;
@@ -28,15 +30,18 @@ public class regression extends Command {
     double angle;
     if (freezeRegress < -100) {
       angle = 0.88;
+      pivot.setPosisition(angle);
     } else {
       angle =
           (a * Math.pow(freezeRegress, 3)
               + b * Math.pow(freezeRegress, 2)
               + c * freezeRegress
               + yIntercept);
+      System.out.println(angle);
+      pivot.setPosisition(angle);
     }
 
-    pivot.setPosisition(angle);
+    // pivot.setPosisition(angle);
   }
 
   @Override

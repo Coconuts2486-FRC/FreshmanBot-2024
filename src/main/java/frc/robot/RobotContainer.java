@@ -37,7 +37,6 @@ import frc.robot.commands.shooter.QuickShoot;
 import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
 import frc.robot.commands.shooter.regression;
-import frc.robot.commands.shooter.setpoint;
 import frc.robot.subsystems.ampmech.elevator;
 import frc.robot.subsystems.ampmech.roller;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
@@ -227,7 +226,7 @@ public class RobotContainer {
         .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, -0.05))
         .whileFalse(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0));
 
-    codriver.x().whileTrue(new setpoint(pivot, 0.885));
+    // codriver.x().whileTrue(new setpoint(pivot, 0.885));
 
     // codriver.x().whileTrue(new Pivot(0.95, pivot, pivotTrigger, pivotTrigger2, 2, 0));
 
