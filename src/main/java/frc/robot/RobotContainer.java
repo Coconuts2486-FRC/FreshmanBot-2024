@@ -244,15 +244,13 @@ public class RobotContainer {
         .whileTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, -0.05))
         .whileFalse(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 1, 0));
 
-    // codriver.x().whileTrue(new setpoint(pivot, 0.885));
-
-    // codriver.x().whileTrue(new Pivot(0.95, pivot, pivotTrigger, pivotTrigger2, 2, 0));
 
     driver
         .leftBumper()
-        .toggleOnTrue(
-            new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 2, -0.3)
-                .until(pivotTrigger::getAsBoolean));
+        .whileTrue(Commands.parallel(new setpoint(pivot, 0), new QuickShoot(roller, shooter)));
+
+    codriver.y().whileTrue(new setpoint(pivot, 0.88));
+
     // codriver.y().toggleOnTrue(new Pivot(0, pivot, pivotTrigger, pivotTrigger2, 2, 0.50));
     // driver
     //     .x()
@@ -260,8 +258,8 @@ public class RobotContainer {
     //     .whileFalse(new Pivot(0, pivot, climbTriggerDown, elevatorTrigger, 0));
 
     // ampmech Command
-    codriver
-        .a()
+    codriver.
+    a()
         .toggleOnTrue(
             new AmpmechCommands(
                     elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 1)
@@ -274,11 +272,11 @@ public class RobotContainer {
                     elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 3)
                 .withTimeout(3));
 
-    // driver
-    //     .x()
-    //     .toggleOnTrue(
-    //         new AmpmechCommands(
-    //             elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 4));
+     driver
+         .x()
+        .toggleOnTrue(
+             new AmpmechCommands(
+                 elevator, roller, elevatorTrigger, elevatorTrigger2, () -> intakeStop.get(), 4));
 
     // Intake Command
 
