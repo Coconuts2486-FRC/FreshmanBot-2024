@@ -29,12 +29,11 @@ import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AmpmechCommands;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.TargetTagCommand;
+import frc.robot.commands.Target;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.IntakeCommandauto;
 import frc.robot.commands.shooter.Pivot;
 import frc.robot.commands.shooter.QuickShoot;
-import frc.robot.commands.shooter.ShooterCommands;
 import frc.robot.commands.shooter.SpinUpCommands;
 import frc.robot.commands.shooter.regressionCommand;
 import frc.robot.commands.shooter.setpoint;
@@ -159,26 +158,37 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "runIntake",
         new IntakeCommandauto(
-            roller,
-            intake,
-            0.75,
-            () -> 0,
-            () -> 0,
-            () -> intakeStop.get(),
-            () -> elevatorStop2.get()));
+                roller,
+                intake,
+                0.75,
+                () -> 0,
+                () -> 0,
+                () -> intakeStop.get(),
+                () -> elevatorStop2.get())
+            .withTimeout(5));
 
-    NamedCommands.registerCommand("shoot", new ShooterCommands(roller, 1.0).withTimeout(0.5));
+    // NamedCommands.registerCommand("shoot", new ShooterCommands(roller, 1.0).withTimeout(0.5));
+    NamedCommands.registerCommand("shoot", new QuickShoot(roller, shooter));
+    NamedCommands.registerCommand("shoot1", new QuickShoot(roller, shooter).withTimeout(2.4));
+    NamedCommands.registerCommand("shoot2", new QuickShoot(roller, shooter).withTimeout(2.2));
+
+    NamedCommands.registerCommand("regress1", new setpoint(pivot, 0.968));
+    NamedCommands.registerCommand("regress2", new setpoint(pivot, 0.975));
+    NamedCommands.registerCommand("regress3", new setpoint(pivot, 0.975));
+    NamedCommands.registerCommand("target", new Target(m_robotDrive, aprilTagVision));
 
     NamedCommands.registerCommand("spinUp", new SpinUpCommands(shooter).withTimeout(0.6));
-    NamedCommands.registerCommand("ampspinup", new SpinUpCommands(shooter).withTimeout(0.75));
-    NamedCommands.registerCommand("spinUp0", new SpinUpCommands(shooter).withTimeout(0.25));
-    NamedCommands.registerCommand("spinUp1", new SpinUpCommands(shooter).withTimeout(1.12));
-    NamedCommands.registerCommand("spinUp2", new SpinUpCommands(shooter).withTimeout(1.5));
-    NamedCommands.registerCommand("spinUp3", new SpinUpCommands(shooter).withTimeout(2.64));
+    NamedCommands.registerCommand("spinUp1", new SpinUpCommands(shooter).withTimeout(2.1));
 
-    NamedCommands.registerCommand("spinUpAmp1", new SpinUpCommands(shooter).withTimeout(3.04));
-    NamedCommands.registerCommand("spinUpAmp2", new SpinUpCommands(shooter).withTimeout(3.2));
-    NamedCommands.registerCommand("spinUpAmpSet", new SpinUpCommands(shooter).withTimeout(0.69));
+    // NamedCommands.registerCommand("ampspinup", new SpinUpCommands(shooter).withTimeout(0.75));
+    // NamedCommands.registerCommand("spinUp0", new SpinUpCommands(shooter).withTimeout(0.25));
+    // NamedCommands.registerCommand("spinUp1", new SpinUpCommands(shooter).withTimeout(1.12));
+    // NamedCommands.registerCommand("spinUp2", new SpinUpCommands(shooter).withTimeout(1.5));
+    // NamedCommands.registerCommand("spinUp3", new SpinUpCommands(shooter).withTimeout(2.64));
+
+    // NamedCommands.registerCommand("spinUpAmp1", new SpinUpCommands(shooter).withTimeout(3.04));
+    // NamedCommands.registerCommand("spinUpAmp2", new SpinUpCommands(shooter).withTimeout(3.2));
+    // NamedCommands.registerCommand("spinUpAmpSet", new SpinUpCommands(shooter).withTimeout(0.69));
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -195,16 +205,23 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Target the speaker
-    driver
-        .a()
-        .whileTrue(
-            new TargetTagCommand(
-                m_robotDrive,
-                () -> driver.getLeftY(),
-                () -> driver.getLeftX(),
-                aprilTagVision.getSpeakerYaw().getDegrees()));
+    // driver
+    //     .a()
+    //     .whileTrue(
+    //         new TargetTagCommand(
+    //             m_robotDrive,
+    //             () -> driver.getLeftY(),
+    //             () -> driver.getLeftX(),
+    //             aprilTagVision.getSpeakerYaw().getDegrees()));
 
-    codriver.x().whileTrue(new regressionCommand(pivot, aprilTagVision));
+    // codriver.x().whileTrue(new regressionCommand(pivot, aprilTagVision));
+    // driver.a().whileTrue(new Target(m_robotDrive, aprilTagVision));
+    codriver
+        .x()
+        .whileTrue(
+            Commands.parallel(
+                new regressionCommand(pivot, aprilTagVision, 0.954),
+                new Target(m_robotDrive, aprilTagVision)));
 
     // shooter commands
 

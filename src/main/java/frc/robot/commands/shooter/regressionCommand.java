@@ -11,10 +11,12 @@ public class regressionCommand extends Command {
   pivot pivot;
   AprilTagVision aprilTagVision;
   private double freezeRegress;
+  private double backup;
 
-  public regressionCommand(pivot pivot, AprilTagVision aprilTagVision) {
+  public regressionCommand(pivot pivot, AprilTagVision aprilTagVision, double backup) {
     this.pivot = pivot;
     this.aprilTagVision = aprilTagVision;
+    this.backup = backup;
   }
 
   @Override
@@ -27,10 +29,10 @@ public class regressionCommand extends Command {
     double a = 2.9629E-8;
     double b = -0.0000154932;
     double c = 0.00288892;
-    double yIntercept = 0.784031;
+    double yIntercept = 0.7720031;
     double angle;
     if (freezeRegress < -100) {
-      angle = 0.88;
+      angle = backup;
     } else {
       angle =
           (a * Math.pow(freezeRegress, 3)

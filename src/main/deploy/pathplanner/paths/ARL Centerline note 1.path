@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 7.82,
-        "y": 7.440675687593248
+        "x": 8.374700515304339,
+        "y": 7.258856247992394
       },
       "prevControl": {
-        "x": 6.380730576805756,
-        "y": 7.2591957927739
+        "x": 6.935431092110094,
+        "y": 7.0773763531730465
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,14 +33,14 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 3.9,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
     "rotation": 0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "ARL Champ Amp Side",
@@ -48,5 +48,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

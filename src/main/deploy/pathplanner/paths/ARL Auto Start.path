@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 4.65133393205668,
+        "x": 4.65,
         "y": 6.23
       },
       "prevControl": {
-        "x": 3.65133393205668,
+        "x": 3.6500000000000004,
         "y": 6.23
       },
       "nextControl": null,
@@ -29,18 +29,54 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
-  "eventMarkers": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.6,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.1,
+      "command": {
+        "type": "race",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "regress1"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "shoot1"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 3.9,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 4.659999999999997,
-    "rotateFast": false
+    "rotation": 11.5,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "ARL Champ Amp Side",
@@ -48,5 +84,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

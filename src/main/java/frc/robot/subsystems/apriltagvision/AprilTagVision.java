@@ -212,7 +212,7 @@ public class AprilTagVision extends VirtualSubsystem {
       Logger.recordOutput("Targeting/dumbThing", getSpeakerPose());
       Logger.recordOutput("Targeting/SpeakerYaw", Float.NaN);
       Logger.recordOutput("Targeting/speakerNull", true);
-      return new Rotation2d(Float.NaN);
+      return new Rotation2d(9999);
     }
     Logger.recordOutput("Targeting/speakerNull", false);
     Logger.recordOutput("Targeting/dumbThing", getSpeakerPose());
@@ -231,6 +231,8 @@ public class AprilTagVision extends VirtualSubsystem {
     return yaw;
   }
 
+  // SmartDashboard.putNumber("Shpeeker Yaw", getSpeakerYaw().getDegrees());
+  // SmartDashboard.putNumber("YAW", getSpeakerYaw().getDegrees())
   /**
    * Compute the distance to the SPEAKER AprilTag, as seen by PhotonVision
    *
